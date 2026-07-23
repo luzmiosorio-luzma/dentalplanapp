@@ -56,6 +56,16 @@ CI_ENVIRONMENT = production
 # database.tests.port = 3306
 
 #--------------------------------------------------------------------
+# EMAIL / SMTP
+#--------------------------------------------------------------------
+# Used by Config\Email for outgoing mail (password recovery, receta and
+# presupuesto emails). Required for the password recovery flow to work.
+
+# email.SMTPHost =        # SMTP relay hostname (e.g. smtp-relay.sendinblue.com)
+# email.SMTPUser =        # SMTP account username
+# email.SMTPPass =        # SMTP account password
+
+#--------------------------------------------------------------------
 # CONTENT SECURITY POLICY
 #--------------------------------------------------------------------
 
@@ -138,3 +148,15 @@ CI_ENVIRONMENT = production
 #--------------------------------------------------------------------
 
 # curlrequest.shareOptions = true
+
+#--------------------------------------------------------------------
+# APP-SPECIFIC SETTINGS (Dentalplan)
+#--------------------------------------------------------------------
+# These are custom app constants, not standard CodeIgniter Config
+# properties - they're read directly with env() (see app/Config/Constants.php
+# and app/Models/UserModel.php), not auto-injected into a Config class.
+
+# WHATSAPP_SEND_URL =     # WhatsApp Business API endpoint used to send appointment reminders
+# WHATSAPP_TOKEN =        # WhatsApp Business API access token
+
+# RESET_TOKEN_KEY =       # Secret key used to encrypt/decrypt password-reset links (UserModel::encriptar/desencriptar)
