@@ -981,4 +981,44 @@ class PacienteModel extends Model
         $builder->where('id_consentimiento', $id_consentimiento);
         return $builder->delete();
     }
+
+    public function pacienteBelongsToUsuario(int $idPaciente, int $idUsuario): bool
+    {
+        $db = \Config\Database::connect();
+        $count = $db->table('atencion')
+            ->where('idpaciente', $idPaciente)
+            ->where('idusuario', $idUsuario)
+            ->countAllResults();
+        return $count > 0;
+    }
+
+    public function radiografiaBelongsToUsuario(int $idRadiografia, int $idUsuario): bool
+    {
+        $db = \Config\Database::connect();
+        $count = $db->table('radiografia')
+            ->where('id_radiografia', $idRadiografia)
+            ->where('atencion_idusuario', $idUsuario)
+            ->countAllResults();
+        return $count > 0;
+    }
+
+    public function consentimientoBelongsToUsuario(int $idConsentimiento, int $idUsuario): bool
+    {
+        $db = \Config\Database::connect();
+        $count = $db->table('consentimiento')
+            ->where('id_consentimiento', $idConsentimiento)
+            ->where('atencion_idusuario', $idUsuario)
+            ->countAllResults();
+        return $count > 0;
+    }
+
+    public function recetaBelongsToUsuario(int $idReceta, int $idUsuario): bool
+    {
+        $db = \Config\Database::connect();
+        $count = $db->table('receta')
+            ->where('idreceta', $idReceta)
+            ->where('atencion_idusuario', $idUsuario)
+            ->countAllResults();
+        return $count > 0;
+    }
 }

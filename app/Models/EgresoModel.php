@@ -276,4 +276,14 @@ class EgresoModel extends Model
         return $response;
     }
 
+    public function egresoBelongsToUsuario(int $idEgreso, int $idUsuario): bool
+    {
+        $db = \Config\Database::connect();
+        $count = $db->table('egreso')
+            ->where('idegreso', $idEgreso)
+            ->where('idusuario', $idUsuario)
+            ->countAllResults();
+        return $count > 0;
+    }
+
 }

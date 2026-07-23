@@ -200,4 +200,25 @@ class OdontoModel extends Model
         return $res;
     }
 
+    public function odontogramaBelongsToUsuario(int $idOdontograma, int $idUsuario): bool
+    {
+        $db = \Config\Database::connect();
+        $count = $db->table('odontograma')
+            ->where('idodontograma', $idOdontograma)
+            ->where('atencion_idusuario', $idUsuario)
+            ->countAllResults();
+        return $count > 0;
+    }
+
+    public function odontoItemBelongsToUsuario(int $idItemOdontograma, int $idUsuario): bool
+    {
+        $db = \Config\Database::connect();
+        $count = $db->table('item_odontograma io')
+            ->join('odontograma o', 'o.idodontograma = io.idodontograma')
+            ->where('io.iditem_odontograma', $idItemOdontograma)
+            ->where('o.atencion_idusuario', $idUsuario)
+            ->countAllResults();
+        return $count > 0;
+    }
+
 }

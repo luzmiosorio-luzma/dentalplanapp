@@ -575,4 +575,14 @@ class CitaModel extends Model
 
     }
 
+    public function citaBelongsToUsuario(int $idCita, int $idUsuario): bool
+    {
+        $db = \Config\Database::connect();
+        $count = $db->table('cita')
+            ->where('idcita', $idCita)
+            ->where('idusuario', $idUsuario)
+            ->countAllResults();
+        return $count > 0;
+    }
+
 }
