@@ -47,21 +47,21 @@ class Email extends BaseConfig
      *
      * @var string
      */
-    public $SMTPHost = 'smtp-relay.sendinblue.com';
+    public $SMTPHost = '';
 
     /**
      * SMTP Username
      *
      * @var string
      */
-    public $SMTPUser = 'alonsoleon89@gmail.com';
+    public $SMTPUser = '';
 
     /**
      * SMTP Password
      *
      * @var string
      */
-    public $SMTPPass = 'UDrI2dLMwaATFs8m';
+    public $SMTPPass = '';
 
     /**
      * SMTP Port

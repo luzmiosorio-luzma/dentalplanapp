@@ -32,10 +32,10 @@ class Database extends Config
      */
     public $default = [
         'DSN'      => '',
-        'hostname' => 'localhost',
-        'username' => 'dentalp4_user_dentalplan',
-        'password' => 'user_dentalplan',
-        'database' => 'dentalp4_dbnew',
+        'hostname' => '',
+        'username' => '',
+        'password' => '',
+        'database' => '',
         'DBDriver' => 'MySQLi',
         'DBPrefix' => '',
         'pConnect' => false,

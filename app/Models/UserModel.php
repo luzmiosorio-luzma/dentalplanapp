@@ -14,7 +14,7 @@ class UserModel extends Model
     function encriptar($numero)
     {
 
-        $clave = 'unaclavecompleja123'; // Una clave secreta
+        $clave = env('RESET_TOKEN_KEY', ''); // Clave secreta (definida en .env)
         $metodo = 'AES-128-CTR'; // Método de encriptación
         // Encriptar
         $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($metodo));
@@ -25,7 +25,7 @@ class UserModel extends Model
 
     function desencriptar($numero_encriptado_hex)
     {
-        $clave = 'unaclavecompleja123';
+        $clave = env('RESET_TOKEN_KEY', '');
         $metodo = 'AES-128-CTR';
 
         $data_iv_combined = hex2bin($numero_encriptado_hex);

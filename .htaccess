@@ -2,6 +2,20 @@
 Options All -Indexes
 
 # ----------------------------------------------------------------------
+# Block direct access to sensitive files
+# ----------------------------------------------------------------------
+# .env, DB dumps, archives and dependency manifests must never be served
+# directly, since this app's docroot is the project root (not public/).
+<FilesMatch "(^\.env$|\.env\.[^.]+$|\.sql$|\.sql\.gz$|\.zip$|^composer\.(json|lock)$)">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# ----------------------------------------------------------------------
 # Rewrite engine
 # ----------------------------------------------------------------------
 

@@ -2,6 +2,18 @@
 
 /*
  | --------------------------------------------------------------------
+ | Cargar .env manualmente
+ | --------------------------------------------------------------------
+ | Este archivo se carga en bootstrap.php ANTES de que CodeIgniter cargue
+ | el .env normalmente, así que si algo de acá abajo necesita leer env(),
+ | hay que asegurar que .env ya esté cargado en $_ENV/$_SERVER primero.
+ | Cargarlo dos veces no tiene efecto negativo (DotEnv::load() es idempotente).
+*/
+require_once SYSTEMPATH . 'Config/DotEnv.php';
+(new CodeIgniter\Config\DotEnv(ROOTPATH))->load();
+
+/*
+ | --------------------------------------------------------------------
  | Personal Constants
  | --------------------------------------------------------------------
 */
@@ -106,7 +118,11 @@ define('EVENT_PRIORITY_HIGH', 10);
 // PERSONAL CONSTANTS
 ################################################################
 
-define('WHATSAPP_SEND_URL', 'https://graph.facebook.com/v20.0/341067195766043/messages');
-define('WHATSAPP_TOKEN', 'EAARjqeS0QA8BOxBMpZBzWgDWPZC8Gcie04Kh3oA6yxVGjZC24DRJHXSvWO58tpPRL0LGg9e4qPx1gYHMI37o80hLkjZCMlyV2axbKgFzeB8QZBRCyGUmg9Szm7ZCXZAD94BxjsoWVxDtJeuxNkZAZC0EXZCTvPjnjQn5U6RD57j9iHl59fW6Ek9pNcBOeFUlZBR67g4iQZDZD');
+// NOTE: cannot use the env() helper here yet - Common.php (where it's
+// defined) is required AFTER this file in bootstrap.php. Reading
+// $_ENV/getenv() directly instead, since DotEnv::load() above already
+// populated them.
+define('WHATSAPP_SEND_URL', $_ENV['WHATSAPP_SEND_URL'] ?? (getenv('WHATSAPP_SEND_URL') ?: ''));
+define('WHATSAPP_TOKEN', $_ENV['WHATSAPP_TOKEN'] ?? (getenv('WHATSAPP_TOKEN') ?: ''));
 define('DIR_FIRMA', '/public/uploads/firma/');
 

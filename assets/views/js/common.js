@@ -1,5 +1,13 @@
 let request;
 
+// CSRF: adjunta el token (leído del <meta> renderizado en heads.php) a
+// todas las llamadas $.ajax/$.post/$.get de la app automáticamente.
+$.ajaxSetup({
+    headers: {
+        [$('meta[name="csrf-header-name"]').attr('content')]: $('meta[name="csrf-token-value"]').attr('content')
+    }
+});
+
 $('#btnSalir').click(function (e) {
     const base_url = $('#btnSalir').attr('href');
     const action = base_url + 'login/startLogOut'

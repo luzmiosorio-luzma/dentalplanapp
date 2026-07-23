@@ -32,6 +32,8 @@
     <form id="loginForm" action="<?php echo site_url('/login/startLogIn'); ?>" method="post"
           class="container n-box n-border col-12 col-md-8 col-lg-6 col-xl-4 p-4 p-md-5 d-flex flex-column ">
 
+        <?= csrf_field() ?>
+
         <img class="loginLogo" src="<?php echo site_url('/public/logo.png'); ?>" alt="logo">
 
         <h1 class="h3 mb-3 n-title text-center pb-4">Ingresa a nuestra plataforma</h1>
