@@ -1,0 +1,343 @@
+/* Desktop Navbar Improvements - Glassmorphism Style */
+@media (min-width: 992px) {
+    .n-nav {
+        background: rgba(230, 231, 238, 0.8) !important;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+        padding: 0.5rem 0;
+        transition: all 0.3s ease;
+    }
+
+    .navbar-nav {
+        align-items: center;
+        width: 100%;
+    }
+
+    .custom-item-menu {
+        padding-left: 0 !important;
+        margin-right: 2rem !important;
+        min-height: auto !important;
+    }
+
+    .supermenu-item {
+        color: #44476a !important;
+        font-weight: 600 !important;
+        padding: 0.6rem 1.2rem !important;
+        border-radius: 12px !important;
+        border: 1px solid transparent !important;
+        display: flex !important;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+
+    .supermenu-item i {
+        width: auto !important;
+        margin-right: 0 !important;
+        font-size: 1.1rem;
+        transition: transform 0.3s ease;
+    }
+
+    .supermenu-item:hover {
+        background: rgba(255, 255, 255, 0.5) !important;
+        border-color: rgba(68, 71, 106, 0.2) !important;
+        transform: translateY(-2px);
+        color: #2d3436 !important;
+    }
+
+    .supermenu-item:hover i {
+        transform: scale(1.2);
+    }
+
+    /* Active State for Desktop */
+    li.active .supermenu-item,
+    .supermenu-item.active {
+        background: #44476a !important;
+        color: white !important;
+        box-shadow: 0 4px 15px rgba(68, 71, 106, 0.3) !important;
+    }
+
+    /* Search Bar */
+    #buscadorContainer {
+        position: relative;
+        margin-left: auto !important;
+        width: 240px !important;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50px;
+        padding: 4px 16px !important;
+        border: 1px solid rgba(68, 71, 106, 0.1);
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #buscadorContainer:focus-within {
+        background: white;
+        width: 300px !important;
+        border-color: rgba(68, 71, 106, 0.25);
+        box-shadow: 0 4px 20px rgba(68, 71, 106, 0.1);
+    }
+
+    .searchicon {
+        font-size: 0.85rem !important;
+        color: #44476a;
+        opacity: 0.5;
+        margin-right: 8px;
+        transition: opacity 0.3s ease;
+        flex-shrink: 0;
+    }
+
+    #buscadorContainer:focus-within .searchicon {
+        opacity: 1;
+    }
+
+    .search-input-modern {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0.35rem 0 !important;
+        font-size: 0.85rem !important;
+        color: #44476a !important;
+        height: auto !important;
+        font-weight: 500;
+    }
+
+    .search-input-modern::placeholder {
+        color: #9a9cb8;
+        font-weight: 400;
+    }
+
+    .search-input-modern:focus {
+        outline: none !important;
+    }
+
+    .search-results-list {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        right: 0;
+        z-index: 999;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        display: none;
+    }
+
+    .search-results-list.visible {
+        display: block;
+    }
+
+    /* Logout Button */
+    .logout-btn-modern {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: 1.5rem;
+        padding: 0.5rem 1.2rem;
+        border-radius: 12px;
+        background: rgba(220, 53, 69, 0.08);
+        border: 1px solid rgba(220, 53, 69, 0.15);
+        color: #dc3545;
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        white-space: nowrap;
+    }
+
+    .logout-btn-modern:hover {
+        background: #dc3545;
+        color: white;
+        border-color: #dc3545;
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        transform: translateY(-1px);
+    }
+
+    .logout-btn-modern i {
+        font-size: 0.9rem;
+        transition: transform 0.3s ease;
+    }
+
+    .logout-btn-modern:hover i {
+        transform: rotate(90deg);
+    }
+
+}
+
+/* Ficha Clínica Menu Improvements - Global Styles */
+.ficha-container-integrated {
+    background: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 20px !important;
+    overflow: hidden !important;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.05), -10px -10px 20px rgba(255, 255, 255, 0.8) !important;
+    margin-bottom: 2rem !important;
+}
+
+.ficha-header-modern {
+    background: rgba(68, 71, 106, 0.05) !important;
+    border-bottom: 1px solid rgba(68, 71, 106, 0.1) !important;
+    padding: 1rem !important;
+    display: flex;
+    align-items: center;
+}
+
+.ficha-header-modern img {
+    height: 40px !important;
+    /* Smaller on mobile by default */
+    width: auto !important;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.header-icon-fallback {
+    font-size: 0.8rem;
+    margin-right: 1rem;
+}
+
+.ficha-header-info {
+    margin-left: 1rem;
+}
+
+.ficha-header-info h2 {
+    font-size: 1rem !important;
+    font-weight: 800 !important;
+    color: #2d3436 !important;
+    margin: 0 !important;
+}
+
+.ficha-header-info p {
+    font-size: 0.75rem !important;
+    color: #44476a !important;
+    margin: 0 !important;
+    opacity: 0.8;
+}
+
+.ficha-menu-container-modern {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 0.8rem !important;
+    padding: 1rem !important;
+    list-style: none !important;
+    width: 100% !important;
+}
+
+.ficha-menu-item-modern {
+    flex: 0 1 140px !important;
+    min-width: 120px !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 12px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    cursor: pointer !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.8rem 0.4rem !important;
+    text-decoration: none !important;
+    color: #44476a !important;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.05), -4px -4px 8px rgba(255, 255, 255, 0.8) !important;
+}
+
+.ficha-menu-item-modern:hover {
+    background: rgba(255, 255, 255, 0.7) !important;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 6px 12px rgba(68, 71, 106, 0.1) !important;
+    border-color: rgba(68, 71, 106, 0.2) !important;
+}
+
+.ficha-menu-item-modern i {
+    font-size: 1.1rem !important;
+    margin-bottom: 0.4rem !important;
+    color: #44476a !important;
+    transition: transform 0.3s ease;
+}
+
+.ficha-menu-item-modern:hover i {
+    transform: rotate(5deg);
+    color: #2d3436 !important;
+}
+
+.ficha-menu-item-modern span {
+    font-weight: 700 !important;
+    font-size: 0.75rem !important;
+    text-align: center;
+}
+
+.ficha-menu-item-modern.active {
+    background: #44476a !important;
+    color: white !important;
+    box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.ficha-menu-item-modern.active i {
+    color: white !important;
+}
+
+/* Desktop Adjustments moved back inside @media if larger sizes are needed */
+@media (min-width: 992px) {
+    .ficha-header-modern {
+        padding: 1.5rem 2rem !important;
+    }
+
+    .ficha-header-modern img {
+        height: 60px !important;
+    }
+
+    .ficha-header-info {
+        margin-left: 1.5rem;
+    }
+
+    .ficha-header-info h2 {
+        font-size: 1.25rem !important;
+    }
+
+    .ficha-header-info p {
+        font-size: 0.9rem !important;
+    }
+
+    .ficha-menu-container-modern {
+        gap: 1rem !important;
+        padding: 1.5rem !important;
+    }
+
+    .ficha-menu-item-modern {
+        flex: 0 1 180px !important;
+        min-width: 140px !important;
+        padding: 1rem 0.5rem !important;
+    }
+
+    .ficha-menu-item-modern i {
+        font-size: 1.3rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .ficha-menu-item-modern span {
+        font-size: 0.85rem !important;
+    }
+}
+
+/* Mobile Adjustments for Consent Modal */
+@media (max-width: 991px) {
+    .consent-modal-body {
+        padding: 0.5rem !important;
+    }
+
+    .consent-paper {
+        padding: 1rem !important;
+        margin: 0 !important;
+        border-radius: 8px !important;
+        border: none !important;
+    }
+
+    #modalConsentimiento .modal-dialog {
+        margin: 0.5rem;
+    }
+}
