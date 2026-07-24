@@ -90,8 +90,9 @@ class TareaModel extends Model
 
         $tarea = $data['tarea'];
         $estado = $data['estado'];
+        $usuario = $data['usuario'];
 
-        $queryStr = "UPDATE tarea SET completa=$estado WHERE idtarea = $tarea";
+        $queryStr = "UPDATE tarea SET completa=$estado WHERE idtarea = $tarea and idusuario = $usuario";
 
         $query = $db->query($queryStr);
 

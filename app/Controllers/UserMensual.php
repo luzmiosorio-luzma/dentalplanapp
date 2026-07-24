@@ -14,7 +14,9 @@ class UserMensual extends BaseController
     }
 
     function addOtroIngreso(){
+        $session = \Config\Services::session();
         $data = $_REQUEST;
+        $data['usuario'] = $session->get('user');
 
         $responseData = $this->EgresoModel->insertIngreso($data);
 
@@ -23,7 +25,8 @@ class UserMensual extends BaseController
     function getBalance()
     {
 
-        $usuario = $_REQUEST['usuario'];
+        $session = \Config\Services::session();
+        $usuario = $session->get('user');
         $mes = $_REQUEST['mes'];
         $anio = $_REQUEST['anio'];
         $percent_txt = $this->EgresoModel->getImpuestoActual();
@@ -70,7 +73,9 @@ class UserMensual extends BaseController
 
     function editTareaFecha()
     {
+        $session = \Config\Services::session();
         $data = $_REQUEST;
+        $data['usuario'] = $session->get('user');
 
         $response = $this->TareaModel->updateTareaFecha($data);
 
@@ -79,7 +84,9 @@ class UserMensual extends BaseController
 
     function editTareaDetalle()
     {
+        $session = \Config\Services::session();
         $data = $_REQUEST;
+        $data['usuario'] = $session->get('user');
 
         $response = $this->TareaModel->updateTareaDetalle($data);
 
@@ -88,8 +95,9 @@ class UserMensual extends BaseController
 
     function eliminarTarea()
     {
+        $session = \Config\Services::session();
         $data = $_REQUEST;
-//        $data['usuario'] = $_REQUEST['usuario'];
+        $data['usuario'] = $session->get('user');
 
         $response = $this->TareaModel->deleteTarea($data);
 
@@ -98,7 +106,9 @@ class UserMensual extends BaseController
 
     function editTareaEstado()
     {
+        $session = \Config\Services::session();
         $data = $_REQUEST;
+        $data['usuario'] = $session->get('user');
 
         $response = $this->TareaModel->updateTareaEstado($data);
 
@@ -108,7 +118,9 @@ class UserMensual extends BaseController
     function addEgreso()
     {
 
+        $session = \Config\Services::session();
         $data = $_REQUEST;
+        $data['usuario'] = $session->get('user');
 
         $responseData = $this->EgresoModel->insertEgreso($data);
 
@@ -118,7 +130,14 @@ class UserMensual extends BaseController
 
     function editEgreso()
     {
+        $session = \Config\Services::session();
+        $usuario = $session->get('user');
         $data = $_REQUEST;
+
+        if (!$this->EgresoModel->egresoBelongsToUsuario((int) $data['id'], (int) $usuario)) {
+            echo json_encode('false');
+            return;
+        }
 
         $responseData = $this->EgresoModel->updateEgreso($data);
 

@@ -31,7 +31,15 @@ class UserPaciente extends BaseController
 
     public function fichaSetReceta()
     {
+        $session = \Config\Services::session();
+        $usuario = $session->get('user');
         $data = $_REQUEST;
+        $data['usuario'] = $usuario;
+
+        if (!$this->PacienteModel->pacienteBelongsToUsuario((int) $data['paciente'], (int) $usuario)) {
+            echo json_encode(false);
+            return;
+        }
 
         $responseData = $this->PacienteModel->insertReceta($data);
 
@@ -42,7 +50,8 @@ class UserPaciente extends BaseController
     public function obtieneUserPacientes()
     {
 
-        $id_usuario = $_REQUEST['usuario'];
+        $session = \Config\Services::session();
+        $id_usuario = $session->get('user');
 
         $responseData = $this->PacienteModel->selectPacientes($id_usuario);
 
@@ -53,7 +62,9 @@ class UserPaciente extends BaseController
     public function addPaciente()
     {
 
+        $session = \Config\Services::session();
         $data = $_REQUEST;
+        $data['usuario'] = $session->get('user');
 
         $rut_paciente = $data['rut'];
         $usuario = $data['usuario'];
@@ -77,7 +88,9 @@ class UserPaciente extends BaseController
 
     public function addPacienteDinamic()
     {
+        $session = \Config\Services::session();
         $data = $_REQUEST;
+        $data['usuario'] = $session->get('user');
 
         $responseData = $this->PacienteModel->insertPacienteDinamic($data);
 
@@ -86,7 +99,14 @@ class UserPaciente extends BaseController
 
     public function editPaciente()
     {
+        $session = \Config\Services::session();
+        $usuario = $session->get('user');
         $data = $_REQUEST;
+
+        if (!$this->PacienteModel->pacienteBelongsToUsuario((int) $data['idpaciente'], (int) $usuario)) {
+            echo json_encode(false);
+            return;
+        }
 
         $responseData = $this->PacienteModel->updatePaciente($data);
 
@@ -95,7 +115,14 @@ class UserPaciente extends BaseController
 
     public function fichaSetAnamnesisCorta()
     {
+        $session = \Config\Services::session();
+        $usuario = $session->get('user');
         $data = $_REQUEST;
+
+        if (!$this->PacienteModel->pacienteBelongsToUsuario((int) $data['paciente'], (int) $usuario)) {
+            echo false;
+            return;
+        }
 
         $response = $this->PacienteModel->insertAnamnesisCorta($data);
 
@@ -105,7 +132,14 @@ class UserPaciente extends BaseController
 
     public function fichaGetAnamnesisCorta()
     {
+        $session = \Config\Services::session();
+        $usuario = $session->get('user');
         $id_paciente = $_REQUEST['paciente'];
+
+        if (!$this->PacienteModel->pacienteBelongsToUsuario((int) $id_paciente, (int) $usuario)) {
+            echo json_encode([]);
+            return;
+        }
 
         $response = $this->PacienteModel->selectAnamnesisCorta($id_paciente);
 
@@ -124,8 +158,13 @@ class UserPaciente extends BaseController
     public function fichaSetEvolucion()
     {
         $session = \Config\Services::session();
-        $data['usuario'] = $session->get('user');
         $data = $_REQUEST;
+        $data['usuario'] = $session->get('user');
+
+        if (!$this->PacienteModel->pacienteBelongsToUsuario((int) $data['paciente'], (int) $data['usuario'])) {
+            echo false;
+            return;
+        }
 
         $response = $this->PacienteModel->insertEvolucion($data);
 
@@ -138,6 +177,11 @@ class UserPaciente extends BaseController
         $session = \Config\Services::session();
         $data = $_REQUEST;
         $data['usuario'] = $session->get('user');
+
+        if (!$this->PacienteModel->pacienteBelongsToUsuario((int) $data['paciente'], (int) $data['usuario'])) {
+            echo false;
+            return;
+        }
 
         $response = $this->PacienteModel->insertAnamnesisDetallada($data);
 
@@ -161,6 +205,11 @@ class UserPaciente extends BaseController
         $usuario = $session->get('user');
         $nombre = $_REQUEST['nombre'];
         $paciente = $_REQUEST['paciente'];
+
+        if (!$this->PacienteModel->pacienteBelongsToUsuario((int) $paciente, (int) $usuario)) {
+            echo json_encode(['status' => 'error', 'value' => '']);
+            return;
+        }
 
         $responseData = $this->OdontoModel->insertNuevoOdonto($nombre, $usuario, $paciente);
 
@@ -188,6 +237,11 @@ class UserPaciente extends BaseController
         $items = $_REQUEST['items'];
         $obs = $_REQUEST['observacion'];
 
+        if (!$this->OdontoModel->odontogramaBelongsToUsuario((int) $odonto, (int) $usuario)) {
+            echo json_encode(['sucess' => false]);
+            return;
+        }
+
         $responseData = $this->OdontoModel->insertOdontoItems($usuario, $odonto, $paciente, $items, $obs);
 
         echo json_encode($responseData);
@@ -195,7 +249,14 @@ class UserPaciente extends BaseController
 
     public function obtieneOdontoItems()
     {
+        $session = \Config\Services::session();
+        $usuario = $session->get('user');
         $odonto = $_REQUEST['odonto'];
+
+        if (!$this->OdontoModel->odontogramaBelongsToUsuario((int) $odonto, (int) $usuario)) {
+            echo json_encode(['items' => [], 'obs' => '', 'success' => false]);
+            return;
+        }
 
         $responseData = $this->OdontoModel->selectOdontoItems($odonto);
 
@@ -232,7 +293,14 @@ class UserPaciente extends BaseController
 
     public function getReceta()
     {
+        $session = \Config\Services::session();
+        $usuario = $session->get('user');
         $data = $_REQUEST;
+
+        if (!$this->PacienteModel->recetaBelongsToUsuario((int) $data['id_receta'], (int) $usuario)) {
+            echo 'false';
+            return;
+        }
 
         $responseData = $this->PacienteModel->selectReceta($data);
 
@@ -265,6 +333,10 @@ class UserPaciente extends BaseController
         $receta = $data['receta'] ?? null;
         $id_usuario = $session->get('user');
 
+        if (!$this->PacienteModel->pacienteBelongsToUsuario((int) $id_paciente, (int) $id_usuario)) {
+            echo 'false';
+            return;
+        }
 
         $data['data_paciente'] = $this->PacienteModel->getPacienteData($id_paciente);
         $data['data_usuario'] = $this->UserModel->selectUserInfo($id_usuario);
@@ -290,6 +362,10 @@ class UserPaciente extends BaseController
         $receta = $data['receta'] ?? null;
         $id_usuario = $session->get('user');
 
+        if (!$this->PacienteModel->pacienteBelongsToUsuario((int) $id_paciente, (int) $id_usuario)) {
+            echo 'false';
+            return;
+        }
 
         $data['data_paciente'] = $this->PacienteModel->getPacienteData($id_paciente);
         $data['data_usuario'] = $this->UserModel->selectUserInfo($id_usuario);
@@ -302,12 +378,18 @@ class UserPaciente extends BaseController
 
     function fichaSetRadiografia()
     {
-        $id_paciente = $this->request->getPost('paciente');
-        $id_usuario = $this->request->getPost('usuario');
+        $session = \Config\Services::session();
+        $id_usuario = (int) $session->get('user');
+        $id_paciente = (int) $this->request->getPost('paciente');
         $comentarios = $this->request->getPost('comentarios'); // Array
         $files = $this->request->getFiles();
 
         if (empty($files['radiografias'])) {
+            echo "false";
+            return;
+        }
+
+        if (!$this->PacienteModel->pacienteBelongsToUsuario($id_paciente, $id_usuario)) {
             echo "false";
             return;
         }
@@ -354,16 +436,32 @@ class UserPaciente extends BaseController
 
     function fichaGetRadiografias()
     {
+        $session = \Config\Services::session();
+        $usuario = $session->get('user');
         $id_paciente = $_REQUEST['paciente'];
+
+        if (!$this->PacienteModel->pacienteBelongsToUsuario((int) $id_paciente, (int) $usuario)) {
+            echo json_encode([]);
+            return;
+        }
+
         $radiografias = $this->PacienteModel->getRadiografias($id_paciente);
         echo json_encode($radiografias);
     }
 
     function fichaGetRadiografia()
     {
+        $session = \Config\Services::session();
+        $usuario = $session->get('user');
         $id_radiografia = $_REQUEST['id_radiografia'];
+
+        if (!$this->PacienteModel->radiografiaBelongsToUsuario((int) $id_radiografia, (int) $usuario)) {
+            echo json_encode(['error' => 'No se encontró la radiografía']);
+            return;
+        }
+
         $radio = $this->PacienteModel->getRadiografia($id_radiografia);
-        
+
         if ($radio) {
             $radio['url'] = base_url($radio['ruta']);
             echo json_encode($radio);
@@ -374,7 +472,15 @@ class UserPaciente extends BaseController
 
     function fichaDelRadiografia()
     {
+        $session = \Config\Services::session();
+        $usuario = $session->get('user');
         $id_radiografia = $_REQUEST['id_radiografia'];
+
+        if (!$this->PacienteModel->radiografiaBelongsToUsuario((int) $id_radiografia, (int) $usuario)) {
+            echo "false";
+            return;
+        }
+
         $radio = $this->PacienteModel->getRadiografia($id_radiografia);
 
         if ($radio) {
@@ -401,6 +507,11 @@ class UserPaciente extends BaseController
         $id_usuario = $session->get('user');
         $id_paciente = $_REQUEST['paciente'];
 
+        if (!$this->PacienteModel->pacienteBelongsToUsuario((int) $id_paciente, (int) $id_usuario)) {
+            echo json_encode([]);
+            return;
+        }
+
         $paciente = $this->PacienteModel->getPacienteData($id_paciente);
         $usuario = $this->UserModel->selectUserInfo($id_usuario);
 
@@ -416,12 +527,18 @@ class UserPaciente extends BaseController
 
     function fichaSetConsentimiento()
     {
-        $id_paciente = $_REQUEST['paciente'];
-        $id_usuario = $_REQUEST['usuario'];
+        $session = \Config\Services::session();
+        $id_usuario = (int) $session->get('user');
+        $id_paciente = (int) $_REQUEST['paciente'];
         $nro_presupuesto = $_REQUEST['nro_presupuesto'];
         $detalle = $_REQUEST['detalle'];
         $nombre_doctor = $_REQUEST['nombre_doctor'];
         $firma_base64 = $_REQUEST['firma'];
+
+        if (!$this->PacienteModel->pacienteBelongsToUsuario($id_paciente, $id_usuario)) {
+            echo "false";
+            return;
+        }
 
         // Guardar firma física
         $dir = 'uploads/consentimientos/' . $id_usuario . '/' . $id_paciente . '/';
@@ -460,8 +577,9 @@ class UserPaciente extends BaseController
 
     function fichaGetConsentimiento()
     {
+        $session = \Config\Services::session();
         $id_paciente = $_REQUEST['paciente'];
-        $id_usuario = $_REQUEST['usuario'];
+        $id_usuario = $session->get('user');
 
         $consentimientos = $this->PacienteModel->getConsentimiento($id_paciente, $id_usuario);
         
@@ -477,7 +595,14 @@ class UserPaciente extends BaseController
 
     function fichaDelConsentimiento()
     {
+        $session = \Config\Services::session();
+        $usuario = $session->get('user');
         $id_consentimiento = $_REQUEST['id'];
+
+        if (!$this->PacienteModel->consentimientoBelongsToUsuario((int) $id_consentimiento, (int) $usuario)) {
+            echo "false";
+            return;
+        }
 
         $consen = $this->PacienteModel->getConsentimientoById($id_consentimiento);
         if ($consen) {
@@ -497,9 +622,16 @@ class UserPaciente extends BaseController
 
     function fichaGetConsentimientoPdf()
     {
+        $session = \Config\Services::session();
+        $usuario = $session->get('user');
         $id_consentimiento = $_GET['id'];
+
+        if (!$this->PacienteModel->consentimientoBelongsToUsuario((int) $id_consentimiento, (int) $usuario)) {
+            return redirect()->to('forbidden');
+        }
+
         $consentimiento = $this->PacienteModel->getConsentimientoById($id_consentimiento);
-        
+
         if (!$consentimiento) return redirect()->to('forbidden');
 
         $id_paciente = $consentimiento['atencion_idpaciente'];

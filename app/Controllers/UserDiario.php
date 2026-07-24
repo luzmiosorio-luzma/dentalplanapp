@@ -25,7 +25,8 @@ class UserDiario extends BaseController
     function getUserCitas()
     {
 
-        $usuario = $_REQUEST['usuario'];
+        $session = \Config\Services::session();
+        $usuario = $session->get('user');
 
         $responseData = $this->CitaModel->selectUserCitas($usuario);
 

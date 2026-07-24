@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\CitaModel;
 use App\Models\TareaModel;
+use App\Models\PacienteModel;
 
 
 class UserCitas extends BaseController
@@ -12,12 +13,20 @@ class UserCitas extends BaseController
     {
         $this->CitaModel = new CitaModel();
         $this->TareaModel = new TareaModel();
+        $this->PacienteModel = new PacienteModel();
     }
 
     public function addCita()
     {
-
+        $session = \Config\Services::session();
+        $usuario = $session->get('user');
         $userData = $_REQUEST;
+        $userData['usuario'] = $usuario;
+
+        if (!$this->PacienteModel->pacienteBelongsToUsuario((int) $userData['paciente'], (int) $usuario)) {
+            echo 'false';
+            return;
+        }
 
         $responseData = $this->CitaModel->insertCita($userData);
 
@@ -26,7 +35,8 @@ class UserCitas extends BaseController
 
     function getTareas(){
 
-        $usuario = $_REQUEST['usuario'];
+        $session = \Config\Services::session();
+        $usuario = $session->get('user');
 
         $start = $_REQUEST['start'];
         $date_start = new \DateTime($start);
@@ -48,7 +58,8 @@ class UserCitas extends BaseController
     function getUserCitas()
     {
 
-        $usuario = $_REQUEST['usuario'];
+        $session = \Config\Services::session();
+        $usuario = $session->get('user');
 
         $responseData = $this->CitaModel->selectUserCitas($usuario);
 
