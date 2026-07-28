@@ -76,59 +76,59 @@ $routes->add('login/startLogOut', 'Login::startLogOut', ['filter' => 'authGuard'
 
 /* CONTROLLER ROUTES*/
 /* ADMIN ROUTES*/
-$routes->add('AdminUsuarios/getUsers', 'AdminUsuarios::getUsers', ['filter' => 'authGuard']);
-$routes->add('AdminUsuarios/editUser', 'AdminUsuarios::editUser', ['filter' => 'authGuard']);
-$routes->add('AdminUsuarios/addUser', 'AdminUsuarios::addUser', ['filter' => 'authGuard']);
-$routes->add('AdminUsuarios/getDataUsuario', 'AdminUsuarios::getDataUsuario', ['filter' => 'authGuard']);
-$routes->add('AdminUsuarios/updateDataUsuario', 'AdminUsuarios::updateDataUsuario', ['filter' => 'authGuard']);
-$routes->add('AdminUsuarios/putSaveFirma', 'AdminUsuarios::putSaveFirma', ['filter' => 'authGuard']);
-$routes->add('AdminUsuarios/getFirma', 'AdminUsuarios::getFirma', ['filter' => 'authGuard']);
+$routes->add('AdminUsuarios/getUsers', 'AdminUsuarios::getUsers', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminUsuarios/editUser', 'AdminUsuarios::editUser', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminUsuarios/addUser', 'AdminUsuarios::addUser', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminUsuarios/getDataUsuario', 'AdminUsuarios::getDataUsuario', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminUsuarios/updateDataUsuario', 'AdminUsuarios::updateDataUsuario', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminUsuarios/putSaveFirma', 'AdminUsuarios::putSaveFirma', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminUsuarios/getFirma', 'AdminUsuarios::getFirma', ['filter' => ['authGuard', 'roleGuard:1']]);
 
-$routes->add('AdminCitas/addCita', 'AdminCitas::addCita', ['filter' => 'authGuard']);
-$routes->add('AdminCitas/addTarea', 'AdminCitas::addTarea', ['filter' => 'authGuard']);
-$routes->add('AdminCitas/getUserCitas', 'AdminCitas::getUserCitas', ['filter' => 'authGuard']);
-$routes->add('AdminCitas/getCitaDetalle', 'AdminCitas::getCitaDetalle', ['filter' => 'authGuard']);
-$routes->add('AdminCitas/editCita', 'AdminCitas::editCita', ['filter' => 'authGuard']);
-$routes->add('AdminCitas/editTarea', 'AdminCitas::editTarea', ['filter' => 'authGuard']);
-$routes->add('AdminCitas/removeCita', 'AdminCitas::removeCita', ['filter' => 'authGuard']);
+$routes->add('AdminCitas/addCita', 'AdminCitas::addCita', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminCitas/addTarea', 'AdminCitas::addTarea', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminCitas/getUserCitas', 'AdminCitas::getUserCitas', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminCitas/getCitaDetalle', 'AdminCitas::getCitaDetalle', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminCitas/editCita', 'AdminCitas::editCita', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminCitas/editTarea', 'AdminCitas::editTarea', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminCitas/removeCita', 'AdminCitas::removeCita', ['filter' => ['authGuard', 'roleGuard:1']]);
 
-$routes->add('AdminDiario/getUserCitas', 'AdminDiario::getUserCitas', ['filter' => 'authGuard']);
-$routes->add('AdminMensual/getBalance', 'AdminMensual::getBalance', ['filter' => 'authGuard']);
-$routes->add('AdminMensual/addEgreso', 'AdminMensual::addEgreso', ['filter' => 'authGuard']);
-$routes->add('AdminMensual/editEgreso', 'AdminMensual::editEgreso', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/obtieneUserPresupuestos', 'AdminPresupuesto::obtieneUserPresupuestos', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/getPacientePresupuestos', 'AdminPresupuesto::getPacientePresupuestos', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/editItemDesarrollo', 'AdminPresupuesto::editItemDesarrollo', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/editItemDescripcion', 'AdminPresupuesto::editItemDescripcion', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/editItemDiente', 'AdminPresupuesto::editItemDiente', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/editItemValor', 'AdminPresupuesto::editItemValor', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/editItemObserv', 'AdminPresupuesto::editItemObserv', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/editItemPago', 'AdminPresupuesto::editItemPago', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/editItemFechaPago', 'AdminPresupuesto::editItemFechaPago', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/addPresupuesto', 'AdminPresupuesto::addPresupuesto', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/getDataPresupuesto', 'AdminPresupuesto::getDataPresupuesto', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/getDataItemPresupuesto', 'AdminPresupuesto::getDataItemPresupuesto', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/editItemPresupuesto', 'AdminPresupuesto::editItemPresupuesto', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/getDataItemsPresupuesto', 'AdminPresupuesto::getDataItemsPresupuesto', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/updatePresupuesto', 'AdminPresupuesto::updatePresupuesto', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/eliminarItemPresupuesto', 'AdminPresupuesto::eliminarItemPresupuesto', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/addItemToPresupuesto', 'AdminPresupuesto::addItemToPresupuesto', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/getPrestaciones', 'AdminPresupuesto::getPrestaciones', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/getUserPrestacionesExcel', 'AdminPresupuesto::getUserPrestacionesExcel', ['filter' => 'authGuard']);
-$routes->add('AdminPresupuesto/uploadPrestaciones', 'AdminPresupuesto::uploadPrestaciones', ['filter' => 'authGuard']);
+$routes->add('AdminDiario/getUserCitas', 'AdminDiario::getUserCitas', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminMensual/getBalance', 'AdminMensual::getBalance', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminMensual/addEgreso', 'AdminMensual::addEgreso', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminMensual/editEgreso', 'AdminMensual::editEgreso', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/obtieneUserPresupuestos', 'AdminPresupuesto::obtieneUserPresupuestos', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/getPacientePresupuestos', 'AdminPresupuesto::getPacientePresupuestos', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/editItemDesarrollo', 'AdminPresupuesto::editItemDesarrollo', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/editItemDescripcion', 'AdminPresupuesto::editItemDescripcion', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/editItemDiente', 'AdminPresupuesto::editItemDiente', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/editItemValor', 'AdminPresupuesto::editItemValor', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/editItemObserv', 'AdminPresupuesto::editItemObserv', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/editItemPago', 'AdminPresupuesto::editItemPago', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/editItemFechaPago', 'AdminPresupuesto::editItemFechaPago', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/addPresupuesto', 'AdminPresupuesto::addPresupuesto', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/getDataPresupuesto', 'AdminPresupuesto::getDataPresupuesto', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/getDataItemPresupuesto', 'AdminPresupuesto::getDataItemPresupuesto', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/editItemPresupuesto', 'AdminPresupuesto::editItemPresupuesto', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/getDataItemsPresupuesto', 'AdminPresupuesto::getDataItemsPresupuesto', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/updatePresupuesto', 'AdminPresupuesto::updatePresupuesto', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/eliminarItemPresupuesto', 'AdminPresupuesto::eliminarItemPresupuesto', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/addItemToPresupuesto', 'AdminPresupuesto::addItemToPresupuesto', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/getPrestaciones', 'AdminPresupuesto::getPrestaciones', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/getUserPrestacionesExcel', 'AdminPresupuesto::getUserPrestacionesExcel', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminPresupuesto/uploadPrestaciones', 'AdminPresupuesto::uploadPrestaciones', ['filter' => ['authGuard', 'roleGuard:1']]);
 
 
-$routes->add('AdminNovedades/getAdminNovedades', 'AdminNovedades::getAdminNovedades', ['filter' => 'authGuard']);
-$routes->add('AdminNovedades/putAdminNovedad', 'AdminNovedades::putAdminNovedad', ['filter' => 'authGuard']);
-$routes->add('AdminNovedades/putEditAdminNovedad', 'AdminNovedades::putEditAdminNovedad', ['filter' => 'authGuard']);
+$routes->add('AdminNovedades/getAdminNovedades', 'AdminNovedades::getAdminNovedades', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminNovedades/putAdminNovedad', 'AdminNovedades::putAdminNovedad', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminNovedades/putEditAdminNovedad', 'AdminNovedades::putEditAdminNovedad', ['filter' => ['authGuard', 'roleGuard:1']]);
 
 
 /* USER ROUTES*/
 $routes->add('UserCitas/addCita', 'UserCitas::addCita', ['filter' => 'authGuard']);
 $routes->add('UserCitas/getUserCitas', 'UserCitas::getUserCitas', ['filter' => 'authGuard']);
 $routes->add('UserCitas/getTareas', 'UserCitas::getTareas', ['filter' => 'authGuard']);
-$routes->add('AdminCitas/updateFechaCita', 'AdminCitas::updateFechaCita', ['filter' => 'authGuard']);
-$routes->add('AdminCitas/enviarWhatsapp', 'AdminCitas::enviarWhatsapp', ['filter' => 'authGuard']);
+$routes->add('AdminCitas/updateFechaCita', 'AdminCitas::updateFechaCita', ['filter' => ['authGuard', 'roleGuard:1']]);
+$routes->add('AdminCitas/enviarWhatsapp', 'AdminCitas::enviarWhatsapp', ['filter' => ['authGuard', 'roleGuard:1']]);
 
 $routes->add('UserDiario/getUserCitas', 'UserDiario::getUserCitas', ['filter' => 'authGuard']);
 
