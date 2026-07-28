@@ -158,5 +158,3 @@ CI_ENVIRONMENT = production
 
 # WHATSAPP_SEND_URL =     # WhatsApp Business API endpoint used to send appointment reminders
 # WHATSAPP_TOKEN =        # WhatsApp Business API access token
-
-# RESET_TOKEN_KEY =       # Secret key used to encrypt/decrypt password-reset links (UserModel::encriptar/desencriptar)

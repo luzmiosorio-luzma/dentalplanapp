@@ -11,36 +11,29 @@ class UserModel extends Model
     protected $table = 'usuario';
 
 
-    function encriptar($numero)
+    function generarTokenReset($idusuario)
     {
+        $db = db_connect();
 
-        $clave = env('RESET_TOKEN_KEY', ''); // Clave secreta (definida en .env)
-        $metodo = 'AES-128-CTR'; // Método de encriptación
-        // Encriptar
-        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($metodo));
-        $numero_encriptado = openssl_encrypt($numero, $metodo, $clave, OPENSSL_RAW_DATA, $iv);
-        $numero_encriptado_hex = bin2hex($numero_encriptado . $iv); // Convertir a hexadecimal
-        return $numero_encriptado_hex;
-    }
+        // Invalidar cualquier token anterior sin usar de este usuario
+        $db->query("UPDATE password_reset_token SET usado = 1 WHERE idusuario = ? AND usado = 0", [$idusuario]);
 
-    function desencriptar($numero_encriptado_hex)
-    {
-        $clave = env('RESET_TOKEN_KEY', '');
-        $metodo = 'AES-128-CTR';
+        $token = bin2hex(random_bytes(32));
+        $tokenHash = hash('sha256', $token);
 
-        $data_iv_combined = hex2bin($numero_encriptado_hex);
-        $iv_size = openssl_cipher_iv_length($metodo);
-        $iv = substr($data_iv_combined, strlen($data_iv_combined) - $iv_size);
-        $encrypted_data = substr($data_iv_combined, 0, strlen($data_iv_combined) - $iv_size);
-        $numero_desencriptado = openssl_decrypt($encrypted_data, $metodo, $clave, OPENSSL_RAW_DATA, $iv);
-        return $numero_desencriptado;
+        $db->query(
+            "INSERT INTO password_reset_token (idusuario, token_hash, fecha_creacion, fecha_expiracion) VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR))",
+            [$idusuario, $tokenHash]
+        );
+
+        return $token;
     }
 
     function actualizarPass($user, $password){
         $db = db_connect();
 
-        $queryStr = "UPDATE usuario SET password = '$password' WHERE idusuario = $user";
-        $query = $db->query($queryStr);
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        $query = $db->query("UPDATE usuario SET password = ? WHERE idusuario = ?", [$hash, $user]);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -75,7 +68,7 @@ class UserModel extends Model
 
         $nombre = $userData['nombre'];
         $email = $userData['email'];
-        $password = $userData['password'];
+        $password = password_hash($userData['password'], PASSWORD_DEFAULT);
         $role = $userData['rol'];
 
 

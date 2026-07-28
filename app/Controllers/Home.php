@@ -28,26 +28,44 @@ class Home extends BaseController
     }
 
     public function saveresetpass(){
-        $pass = $_POST['pass'];
-        $validationUser = $_POST['validationUser'];
+        $token = $_POST['validationUser'] ?? '';
+        $pass = $_POST['pass'] ?? '';
 
-        $userId =  $this->UserModel->desencriptar($validationUser);
-
-        if ($userId && $pass){
-            //ACTUALIZAR CONTRASEÑA
-
-            $res = $this->UserModel->actualizarPass($userId, $pass);
-
-            if ($res === 'true') {
-                $return = ['success'];
-            }else{
-                $return = ['error'];
-            }
-        }else{
-            $return = ['error'];
+        if (!$token || !$pass) {
+            echo json_encode(['error']);
+            return;
         }
 
-        echo json_encode($return);
+        $tokenHash = hash('sha256', $token);
+        $db = db_connect();
+
+        $row = $db->query(
+            "SELECT id_token, idusuario FROM password_reset_token WHERE token_hash = ? AND usado = 0 AND fecha_expiracion > NOW()",
+            [$tokenHash]
+        )->getRow();
+
+        if (!$row) {
+            echo json_encode(['error']);
+            return;
+        }
+
+        try {
+            $db->transStart();
+            $this->UserModel->actualizarPass($row->idusuario, $pass);
+            $db->query("UPDATE password_reset_token SET usado = 1 WHERE id_token = ?", [$row->id_token]);
+            $db->transComplete();
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            echo json_encode(['error']);
+            return;
+        }
+
+        if ($db->transStatus() === false) {
+            echo json_encode(['error']);
+            return;
+        }
+
+        echo json_encode(['success']);
     }
 
     public function recover()
@@ -65,13 +83,9 @@ class Home extends BaseController
 
             $id = $result[0];
 
-            $numero_encriptado = $this->UserModel->encriptar($id);
-            $vu = 'vu='.$numero_encriptado;
+            $token = $this->UserModel->generarTokenReset($id);
+            $vu = 'vu='.$token;
             $url = base_url(). '/resetpass?'.$vu;
-
-//            $numero = '1000'; // Tu número a encriptar
-//            $numero_encriptado = $this->UserModel->encriptar($numero);
-//            $numero_desencriptado = $this->UserModel->desencriptar($numero_encriptado);
 
             //ENVIAR CORREO CON ENLACE DE RECUPERACION
             ini_set("memory_limit", "512M");
@@ -110,16 +124,24 @@ class Home extends BaseController
 
     public function resetpass()
     {
+        $token = $_GET['vu'] ?? '';
 
-        $data = $_REQUEST;
-
-        try {
-            $user = $data['vu'];
-            return view('resetpass');
-        } catch (\Exception $e) {
+        if (!preg_match('/^[a-f0-9]{64}$/', $token)) {
             return redirect()->to('forbidden');
         }
 
+        $tokenHash = hash('sha256', $token);
+        $db = db_connect();
+        $row = $db->query(
+            "SELECT id_token FROM password_reset_token WHERE token_hash = ? AND usado = 0 AND fecha_expiracion > NOW()",
+            [$tokenHash]
+        )->getRow();
+
+        if (!$row) {
+            return redirect()->to('forbidden');
+        }
+
+        return view('resetpass');
     }
 
     public function mailsent()
