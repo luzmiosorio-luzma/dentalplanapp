@@ -222,7 +222,7 @@ class UserModel extends Model
     {
         $db = db_connect();
 
-        $queryStr = "SELECT codigo as id, nombre FROM usuario WHERE activo = TRUE AND rol = 2";
+        $queryStr = "SELECT idusuario as id, nombre FROM usuario WHERE activo = TRUE AND rol = 2";
 
         $query = $db->query($queryStr);
 
