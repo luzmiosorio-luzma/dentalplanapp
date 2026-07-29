@@ -22,6 +22,16 @@ body{
     height: 12rem;
 }
 
+.login-tagline {
+    font-family: "Playfair Display", serif;
+    font-style: italic;
+    font-weight: 700;
+    color: #44476a;
+    font-size: 1.4rem;
+    margin: 0.5rem 0 1.5rem;
+    width: 100%;
+}
+
 .legend-input{
     height: 50px;
     width: 50px;
@@ -50,6 +60,13 @@ body{
 @media (min-width: 768px) {
     #loginForm{
         height: auto;
+    }
+}
+
+/* Pantallas angostas (por debajo de donde la tarjeta pasa a ancho completo) */
+@media (max-width: 767.98px) {
+    .login-tagline {
+        font-size: 1.1rem;
     }
 }
 

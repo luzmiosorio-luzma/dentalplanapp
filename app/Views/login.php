@@ -18,6 +18,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Ingresar al Sistema</title>
     <?php echo view('heads'); ?>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo base_url() ?>/assets/views/css/login.css">
 </head>
 <body class="h-100 w-100 d-block n-body">
@@ -35,6 +38,8 @@
         <?= csrf_field() ?>
 
         <img class="loginLogo" src="<?php echo site_url('/public/logo.png'); ?>" alt="logo">
+
+        <p class="login-tagline text-center">Tu consulta. Tu independencia. Tu crecimiento.</p>
 
         <h1 class="h3 mb-3 n-title text-center pb-4">Ingresa a nuestra plataforma</h1>
 
