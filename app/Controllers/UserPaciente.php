@@ -540,23 +540,35 @@ class UserPaciente extends BaseController
             return;
         }
 
+        $data_firma = explode(',', $firma_base64);
+        if (count($data_firma) < 2) {
+            echo "false";
+            return;
+        }
+
+        $decoded_image = base64_decode($data_firma[1], true);
+        if ($decoded_image === false) {
+            echo "false";
+            return;
+        }
+
+        helper('upload_validation');
+        if (validate_decoded_image($decoded_image, 500 * 1024)) {
+            echo "false";
+            return;
+        }
+
         // Guardar firma física
         $dir = 'uploads/consentimientos/' . $id_usuario . '/' . $id_paciente . '/';
         $fullPath = FCPATH . $dir;
 
         if (!is_dir($fullPath)) {
-            mkdir($fullPath, 0777, true);
+            mkdir($fullPath, 0755, true);
         }
 
         $fileName = 'firma_' . time() . '.png';
         $filePath = $fullPath . $fileName;
-
-        // Limpiar base64
-        $data_firma = explode(',', $firma_base64);
-        if (count($data_firma) > 1) {
-            $decoded_image = base64_decode($data_firma[1]);
-            file_put_contents($filePath, $decoded_image);
-        }
+        file_put_contents($filePath, $decoded_image);
 
         $data = [
             'atencion_idpaciente' => $id_paciente,

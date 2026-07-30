@@ -19,3 +19,32 @@ if (!function_exists('validate_uploaded_image')) {
         return null;
     }
 }
+
+if (!function_exists('validate_decoded_image')) {
+    /**
+     * Valida bytes de imagen ya decodificados (ej. desde base64), usando
+     * deteccion real de contenido (finfo), no el prefijo del data-URI.
+     *
+     * @return string|null null si es valido, o un codigo de error si no.
+     */
+    function validate_decoded_image(string $decodedBytes, int $maxBytes, string $expectedMime = 'image/png'): ?string
+    {
+        if ($decodedBytes === '') {
+            return 'error_tipo_no_permitido';
+        }
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_buffer($finfo, $decodedBytes);
+        finfo_close($finfo);
+
+        if ($mime !== $expectedMime) {
+            return 'error_tipo_no_permitido';
+        }
+
+        if (strlen($decodedBytes) > $maxBytes) {
+            return 'error_archivo_muy_grande';
+        }
+
+        return null;
+    }
+}

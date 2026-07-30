@@ -240,12 +240,26 @@ class UserModel extends Model
     public function insertSaveFirma($data){
 
         $db = db_connect();
-        $user = $data['user'];
+        $user = (int) $data['user'];
         $img = $data['img'];
         $firma = $data['data'];
 
         $encoded_image = explode(",", $img);
-        $decoded_image = base64_decode($encoded_image[1]);
+        if (count($encoded_image) < 2) {
+            return 'error_tipo_no_permitido';
+        }
+
+        $decoded_image = base64_decode($encoded_image[1], true);
+        if ($decoded_image === false) {
+            return 'error_tipo_no_permitido';
+        }
+
+        helper('upload_validation');
+        $error = validate_decoded_image($decoded_image, 500 * 1024);
+        if ($error) {
+            return $error;
+        }
+
         $file = "firma_usuario_".$user.".png";
         file_put_contents(ROOTPATH . "public/uploads/firma/".$file, $decoded_image);
 
