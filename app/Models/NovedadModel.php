@@ -53,21 +53,20 @@ class NovedadModel extends Model
 
         $titulo = $data['titulo'];
         $uuid = $data['uuid'];
+        $filename = '';
 
+        $file = \Config\Services::request()->getFile('file');
 
-        // SUBIDA DE ARCHIVO
-        if ($_FILES) {
-            $file = $_FILES['file'];
-            $dot_pos = strrpos($file['name'], '.') + 1;
-            $ext = substr($file['name'], $dot_pos, strlen($file['name']) - $dot_pos);
-            $filename = "nov" . $uuid . "." . $ext;
-
-            try {
-                move_uploaded_file($file["tmp_name"], ROOTPATH . "public/uploads/novedades/" . $filename);
-            } catch (Exception $e) {
-                var_dump($e);
-                die;
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            helper('upload_validation');
+            $error = validate_uploaded_image($file, ['jpg', 'jpeg', 'png', 'webp'], ['image/jpeg', 'image/png', 'image/webp'], 5 * 1024 * 1024);
+            if ($error) {
+                return $error;
             }
+
+            $ext = strtolower($file->guessExtension());
+            $filename = "nov" . $uuid . "." . $ext;
+            $file->move(ROOTPATH . "public/uploads/novedades/", $filename, true);
         }
 
 
@@ -97,18 +96,18 @@ class NovedadModel extends Model
 
         $queryStr = "UPDATE novedad SET titulo = '$titulo', activo = $estado ";
 
-        if (isset($data['file'])) {
-            $file = $_FILES['file'];
-            $dot_pos = strrpos($file['name'], '.') + 1;
-            $ext = substr($file['name'], $dot_pos, strlen($file['name']) - $dot_pos);
-            $filename = "nov" . $data['uuid'] . "." . $ext;
+        $file = \Config\Services::request()->getFile('file');
 
-            try {
-                move_uploaded_file($file["tmp_name"], ROOTPATH . "public/uploads/novedades/" . $filename);
-            } catch (Exception $e) {
-                var_dump($e);
-                die;
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            helper('upload_validation');
+            $error = validate_uploaded_image($file, ['jpg', 'jpeg', 'png', 'webp'], ['image/jpeg', 'image/png', 'image/webp'], 5 * 1024 * 1024);
+            if ($error) {
+                return $error;
             }
+
+            $ext = strtolower($file->guessExtension());
+            $filename = "nov" . $data['uuid'] . "." . $ext;
+            $file->move(ROOTPATH . "public/uploads/novedades/", $filename, true);
 
             $queryStr .= ", url = '$filename'";
         }

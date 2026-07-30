@@ -297,23 +297,31 @@ class UserModel extends Model
         $oficina = $userData['oficina'];
         $redes = $userData['redes'];
 
-        if ($_FILES) {
-            $file = $_FILES['file'];
-            $dot_pos = strrpos($file['name'], '.') + 1;
-            $ext = substr($file['name'], $dot_pos, strlen($file['name']) - $dot_pos);
-            $filename = "user_logo_" . $id . "." . $ext;
+        $file = \Config\Services::request()->getFile('file');
 
-            try {
-                move_uploaded_file($file["tmp_name"], ROOTPATH . "public/uploads/logo/" . $filename);
-            } catch (Exception $e) {
-                var_dump($e);
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $allowedExt  = ['jpg', 'jpeg', 'png', 'webp'];
+            $allowedMime = ['image/jpeg', 'image/png', 'image/webp'];
+
+            $ext  = strtolower($file->guessExtension());
+            $mime = $file->getMimeType();
+
+            if ($ext === '' || !in_array($ext, $allowedExt, true) || !in_array($mime, $allowedMime, true)) {
+                return 'error_tipo_no_permitido';
             }
+
+            if ($file->getSize() > 2 * 1024 * 1024) {
+                return 'error_archivo_muy_grande';
+            }
+
+            $filename = "user_logo_" . $id . "." . $ext;
+            $file->move(ROOTPATH . "public/uploads/logo/", $filename, true);
         }
 
-        $queryStr = "UPDATE usuario 
+        $queryStr = "UPDATE usuario
                     SET nombre='$nombre', correo='$email', oficina = '$oficina', fono = '$fono', red_social = '$redes'";
 
-        if ($_FILES) {
+        if ($filename) {
             $queryStr .= ", logo = '$filename'";
         }
 

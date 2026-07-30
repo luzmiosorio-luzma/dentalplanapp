@@ -36,6 +36,10 @@ class AdminNovedades extends BaseController
 
         $response = $this->NovedadModel->updateNovedad($data);
 
+        if (in_array($response, ['error_tipo_no_permitido', 'error_archivo_muy_grande'], true)) {
+            return $this->response->setStatusCode(400)->setJSON(['data' => $response]);
+        }
+
         echo '{"data": ' . json_encode($response) . '}';
     }
 
@@ -51,6 +55,10 @@ class AdminNovedades extends BaseController
         $data['uuid'] = generateUUIDv4();
 
         $response = $this->NovedadModel->insertNovedad($data);
+
+        if (in_array($response, ['error_tipo_no_permitido', 'error_archivo_muy_grande'], true)) {
+            return $this->response->setStatusCode(400)->setJSON(['data' => $response]);
+        }
 
         echo '{"data": ' . json_encode($response) . '}';
     }
