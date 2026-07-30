@@ -70,8 +70,10 @@ app.zip
 # uploads/ (root): radiografias and consentimientos are tied to real patient IDs.
 # public/uploads/: firmas, logos and novedades images uploaded by real accounts.
 # Never commit these - they are live medical/personal data, not app assets.
-/uploads/
-/public/uploads/
+/uploads/*
+!/uploads/.htaccess
+/public/uploads/*
+!/public/uploads/.htaccess
 
 #-------------------------
 # Temporary Files

@@ -1,0 +1,17 @@
+# Prevent execution of any script inside uploads/ — legitimate files
+# (images, etc.) must still be readable via direct HTTP GET.
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+<FilesMatch "(?i)\.(php|phar|phtml|php[3-8]|pl|py|jsp|asp|aspx|sh|cgi|exe)$">
+    <IfModule authz_core_module>
+        Require all denied
+    </IfModule>
+    <IfModule !authz_core_module>
+        Deny from all
+    </IfModule>
+</FilesMatch>
