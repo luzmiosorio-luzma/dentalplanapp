@@ -397,17 +397,26 @@ class UserPaciente extends BaseController
         $exito = true;
         foreach ($files['radiografias'] as $index => $file) {
             if ($file->isValid() && !$file->hasMoved()) {
-                
+
+                helper('upload_validation');
+                $error = validate_uploaded_image($file, ['jpg', 'jpeg', 'png'], ['image/jpeg', 'image/png'], 10 * 1024 * 1024);
+                if ($error) {
+                    $exito = false;
+                    continue;
+                }
+
                 // Estructura de carpetas: public/uploads/radiografias/{usuario}/{paciente}/
                 $dir = 'uploads/radiografias/' . $id_usuario . '/' . $id_paciente . '/';
                 $fullPath = FCPATH . $dir;
 
                 if (!is_dir($fullPath)) {
-                    mkdir($fullPath, 0777, true);
+                    mkdir($fullPath, 0755, true);
                 }
 
                 $originalName = $file->getName();
-                $ext = $file->getExtension();
+                $ext = strtolower($file->guessExtension());
+                $mimeType = $file->getMimeType();
+                $sizeKb = round($file->getSize() / 1024, 2) . ' KB';
                 $newName = time() . '_' . uniqid() . '.' . $ext;
 
                 if ($file->move($fullPath, $newName)) {
@@ -416,8 +425,8 @@ class UserPaciente extends BaseController
                         'atencion_idusuario' => $id_usuario,
                         'nombre' => $originalName,
                         'comentario' => isset($comentarios[$index]) ? $comentarios[$index] : '',
-                        'tipo' => $file->getClientMimeType(),
-                        'tamano' => round($file->getSize() / 1024, 2) . ' KB',
+                        'tipo' => $mimeType,
+                        'tamano' => $sizeKb,
                         'ruta' => $dir . $newName,
                         'fecha' => date('Y-m-d H:i:s')
                     ];
