@@ -399,7 +399,7 @@ class UserPaciente extends BaseController
             if ($file->isValid() && !$file->hasMoved()) {
 
                 helper('upload_validation');
-                $error = validate_uploaded_image($file, ['jpg', 'jpeg', 'png'], ['image/jpeg', 'image/png'], 10 * 1024 * 1024);
+                $error = validate_uploaded_file($file, ['jpg', 'jpeg', 'png'], ['image/jpeg', 'image/png'], 10 * 1024 * 1024);
                 if ($error) {
                     $exito = false;
                     continue;

@@ -1,9 +1,9 @@
 <?php
-if (!function_exists('validate_uploaded_image')) {
+if (!function_exists('validate_uploaded_file')) {
     /**
      * @return string|null null si es valido, o un codigo de error si no.
      */
-    function validate_uploaded_image(\CodeIgniter\HTTP\Files\UploadedFile $file, array $allowedExt, array $allowedMime, int $maxBytes): ?string
+    function validate_uploaded_file(\CodeIgniter\HTTP\Files\UploadedFile $file, array $allowedExt, array $allowedMime, int $maxBytes): ?string
     {
         $ext  = strtolower($file->guessExtension());
         $mime = $file->getMimeType();

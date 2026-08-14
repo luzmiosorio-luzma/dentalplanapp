@@ -59,7 +59,7 @@ class NovedadModel extends Model
 
         if ($file && $file->isValid() && !$file->hasMoved()) {
             helper('upload_validation');
-            $error = validate_uploaded_image($file, ['jpg', 'jpeg', 'png', 'webp'], ['image/jpeg', 'image/png', 'image/webp'], 5 * 1024 * 1024);
+            $error = validate_uploaded_file($file, ['jpg', 'jpeg', 'png', 'webp'], ['image/jpeg', 'image/png', 'image/webp'], 5 * 1024 * 1024);
             if ($error) {
                 return $error;
             }
@@ -100,7 +100,7 @@ class NovedadModel extends Model
 
         if ($file && $file->isValid() && !$file->hasMoved()) {
             helper('upload_validation');
-            $error = validate_uploaded_image($file, ['jpg', 'jpeg', 'png', 'webp'], ['image/jpeg', 'image/png', 'image/webp'], 5 * 1024 * 1024);
+            $error = validate_uploaded_file($file, ['jpg', 'jpeg', 'png', 'webp'], ['image/jpeg', 'image/png', 'image/webp'], 5 * 1024 * 1024);
             if ($error) {
                 return $error;
             }

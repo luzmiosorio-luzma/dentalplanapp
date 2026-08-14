@@ -439,6 +439,12 @@ $('#filePrestaciones').change(function (e) {
             }else{
                 sendToast('error', 'Prestaciones', 'Error al actualizar prestaciones')
             }
+        },
+        error: function (jqXHR) {
+            var msg = (jqXHR.responseJSON && jqXHR.responseJSON.error)
+                ? jqXHR.responseJSON.error
+                : 'Error al procesar el archivo.';
+            sendToast('error', 'Prestaciones', msg);
         }
     });
 })

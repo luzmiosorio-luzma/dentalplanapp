@@ -18,17 +18,26 @@ class AdminPresupuesto extends BaseController
     function uploadPrestaciones()
     {
 
-        helper('utils_helper');
+        helper(['utils_helper', 'upload_validation']);
 
         $file = $this->request->getFile('file');
 
         if (file_exists($file)){
             if ($file->isValid() && !$file->hasMoved()) {
+
+                $error = validate_uploaded_file($file, ['xlsx'], ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], 5 * 1024 * 1024);
+                if ($error) {
+                    $mensaje = $error === 'error_archivo_muy_grande'
+                        ? 'El archivo supera el tamaño máximo permitido (5MB).'
+                        : 'El archivo debe ser una planilla Excel (.xlsx) válida.';
+                    return $this->response->setJSON(['error' => $mensaje])->setStatusCode(400);
+                }
+
                 $filePath = $file->getTempName();
 
                 try {
 
-                    $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
+                    $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xlsx')->load($filePath);
                     $sheet = $spreadsheet->getActiveSheet();
 
 

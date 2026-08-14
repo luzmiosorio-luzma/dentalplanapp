@@ -314,20 +314,13 @@ class UserModel extends Model
         $file = \Config\Services::request()->getFile('file');
 
         if ($file && $file->isValid() && !$file->hasMoved()) {
-            $allowedExt  = ['jpg', 'jpeg', 'png', 'webp'];
-            $allowedMime = ['image/jpeg', 'image/png', 'image/webp'];
-
-            $ext  = strtolower($file->guessExtension());
-            $mime = $file->getMimeType();
-
-            if ($ext === '' || !in_array($ext, $allowedExt, true) || !in_array($mime, $allowedMime, true)) {
-                return 'error_tipo_no_permitido';
+            helper('upload_validation');
+            $error = validate_uploaded_file($file, ['jpg', 'jpeg', 'png', 'webp'], ['image/jpeg', 'image/png', 'image/webp'], 2 * 1024 * 1024);
+            if ($error) {
+                return $error;
             }
 
-            if ($file->getSize() > 2 * 1024 * 1024) {
-                return 'error_archivo_muy_grande';
-            }
-
+            $ext = strtolower($file->guessExtension());
             $filename = "user_logo_" . $id . "." . $ext;
             $file->move(ROOTPATH . "public/uploads/logo/", $filename, true);
         }
