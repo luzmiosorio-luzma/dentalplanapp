@@ -17,15 +17,15 @@ class PresupuestoModel extends Model
         $session = session();
         $usuario = $session->get('user');
 
-        $queryStr = "DELETE FROM prestacion WHERE idusuario = $usuario";
-        $db->query($queryStr);
+        $queryStr = "DELETE FROM prestacion WHERE idusuario = ?";
+        $db->query($queryStr, [$usuario]);
 
         foreach ($prestaciones as $prestacion) {
             $descripcion = $prestacion['descripcion'];
             $valor = $prestacion['valor'];
 
-            $queryStr = "INSERT INTO prestacion VALUES (DEFAULT, $usuario, '$descripcion', '$valor')";
-            $db->query($queryStr);
+            $queryStr = "INSERT INTO prestacion VALUES (DEFAULT, ?, ?, ?)";
+            $db->query($queryStr, [$usuario, $descripcion, $valor]);
         }
 
         $db->transComplete();
@@ -43,9 +43,9 @@ class PresupuestoModel extends Model
         $session = session();
         $usuario = $session->get('user');
 
-        $queryStr = "SELECT p.idprestacion, p.descripcion, p.valor FROM prestacion p WHERE idusuario = $usuario order by p.idprestacion";
+        $queryStr = "SELECT p.idprestacion, p.descripcion, p.valor FROM prestacion p WHERE idusuario = ? order by p.idprestacion";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$usuario]);
 
         $ret = array();
 
