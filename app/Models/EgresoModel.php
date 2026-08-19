@@ -19,9 +19,10 @@ class EgresoModel extends Model
         $boleta = $data['boleta'];
         $monto = $data['monto'];
 
-        $queryStr = "INSERT INTO ingreso_extra VALUES(DEFAULT, $usuario, '$fecha', '$detalle', $pago, $boleta, $monto)";
+        $queryStr = "INSERT INTO ingreso_extra VALUES(DEFAULT, ?, ?, ?, ?, ?, ?)";
+        $binds = [$usuario, $fecha, $detalle, $pago, $boleta, $monto];
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -51,26 +52,26 @@ class EgresoModel extends Model
         $ingresos = array();
 
         $queryStr_con_boleta = "SELECT COALESCE(sum(monto) , 0) as monto
-                                FROM ingreso_extra 
-                                WHERE idusuario = $usuario
+                                FROM ingreso_extra
+                                WHERE idusuario = ?
                                 AND pago = TRUE
-                                AND fecha BETWEEN '$fecha_inicio' AND '$fecha_termino'
+                                AND fecha BETWEEN ? AND ?
                                 AND boleta = TRUE";
 
-        $query_con_boleta = $db->query($queryStr_con_boleta);
+        $query_con_boleta = $db->query($queryStr_con_boleta, [$usuario, $fecha_inicio, $fecha_termino]);
 
         foreach ($query_con_boleta->getResult() as $row) {
             $ingresos['con_boleta'] = $row->monto;
         }
 
         $queryStr_sin_boleta = "SELECT COALESCE(sum(monto) , 0) as monto
-                                FROM ingreso_extra 
-                                WHERE idusuario = $usuario
+                                FROM ingreso_extra
+                                WHERE idusuario = ?
                                 AND pago = TRUE
-                                AND fecha BETWEEN '$fecha_inicio' AND '$fecha_termino'
+                                AND fecha BETWEEN ? AND ?
                                 AND boleta = FALSE";
 
-        $query_sin_boleta = $db->query($queryStr_sin_boleta);
+        $query_sin_boleta = $db->query($queryStr_sin_boleta, [$usuario, $fecha_inicio, $fecha_termino]);
 
         foreach ($query_sin_boleta->getResult() as $row) {
             $ingresos['sin_boleta'] = $row->monto;
@@ -84,23 +85,23 @@ class EgresoModel extends Model
         $ingresos = array();
 
         $queryStr_con_boleta = "SELECT COALESCE(sum(monto) , 0) as monto
-                    FROM cita WHERE idusuario = $usuario AND pago = TRUE
-                    AND fecha BETWEEN '$fecha_inicio' AND '$fecha_termino'
+                    FROM cita WHERE idusuario = ? AND pago = TRUE
+                    AND fecha BETWEEN ? AND ?
                     and boleta = true";
 
 
-        $query_con_boleta = $db->query($queryStr_con_boleta);
+        $query_con_boleta = $db->query($queryStr_con_boleta, [$usuario, $fecha_inicio, $fecha_termino]);
 
         foreach ($query_con_boleta->getResult() as $row) {
             $ingresos['con_boleta'] = $row->monto;
         }
 
         $queryStr_sin_boleta = "SELECT COALESCE(sum(monto) , 0) as monto
-                    FROM cita WHERE idusuario = $usuario AND pago = TRUE
-                    AND fecha BETWEEN '$fecha_inicio' AND '$fecha_termino'
+                    FROM cita WHERE idusuario = ? AND pago = TRUE
+                    AND fecha BETWEEN ? AND ?
                     and boleta = false";
 
-        $query_sin_boleta = $db->query($queryStr_sin_boleta);
+        $query_sin_boleta = $db->query($queryStr_sin_boleta, [$usuario, $fecha_inicio, $fecha_termino]);
 
         foreach ($query_sin_boleta->getResult() as $row) {
             $ingresos['sin_boleta'] = $row->monto;
@@ -136,17 +137,17 @@ class EgresoModel extends Model
                     c.observacion as detalle, c.monto as valor, c.pago as pago, c.boleta as boleta
                     FROM cita c
                     INNER JOIN paciente p ON p.idpaciente = c.idpaciente
-                    WHERE c.idusuario = $usuario
-                    AND c.fecha  BETWEEN '$fecha_inicio' AND '$fecha_termino' ";
+                    WHERE c.idusuario = ?
+                    AND c.fecha  BETWEEN ? AND ? ";
         $queryStr .= "UNION
                     SELECT '0' as idcita, DATE_FORMAT(ige.fecha,'%Y-%m-%d %H:%i'), 'Otros ingresos' as paciente, ige.detalle, ige.monto as valor, ige.pago, ige.boleta
                     FROM ingreso_extra as ige
-                    WHERE ige.idusuario = $usuario
-                    AND ige.fecha BETWEEN '$fecha_inicio' AND '$fecha_termino'
+                    WHERE ige.idusuario = ?
+                    AND ige.fecha BETWEEN ? AND ?
                     ORDER BY 2";
+        $binds = [$usuario, $fecha_inicio, $fecha_termino, $usuario, $fecha_inicio, $fecha_termino];
 
-
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $ret = array();
 
@@ -170,10 +171,10 @@ class EgresoModel extends Model
         $db = db_connect();
 
         $queryStr = "SELECT COALESCE(sum(valor) , 0) as monto
-                    FROM egreso WHERE idusuario = $usuario
-                    AND fecha BETWEEN '$fecha_inicio' AND '$fecha_termino'";
+                    FROM egreso WHERE idusuario = ?
+                    AND fecha BETWEEN ? AND ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$usuario, $fecha_inicio, $fecha_termino]);
 
         $ret = array();
 
@@ -190,12 +191,12 @@ class EgresoModel extends Model
         $queryStr = "SELECT te.nombre_tipo_egreso as tipo_ingreso, sum(e.valor) as valor
                     FROM egreso e
                     JOIN tipo_egreso te on e.idtipo_egreso = te.idtipo_egreso
-                    WHERE e.idusuario = $usuario
-                    AND e.fecha BETWEEN '$fecha_inicio' AND '$fecha_termino'
+                    WHERE e.idusuario = ?
+                    AND e.fecha BETWEEN ? AND ?
                     GROUP BY te.nombre_tipo_egreso
                     ORDER BY 1";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$usuario, $fecha_inicio, $fecha_termino]);
 
         $ret = array();
 
@@ -212,10 +213,10 @@ class EgresoModel extends Model
         $db = db_connect();
 
         $queryStr = "SELECT idegreso, fecha, detalle, valor, idtipo_egreso as cod_tipo_egreso
-                    FROM egreso WHERE idusuario = $usuario
-                    AND fecha BETWEEN '$fecha_inicio' AND '$fecha_termino'";
+                    FROM egreso WHERE idusuario = ?
+                    AND fecha BETWEEN ? AND ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$usuario, $fecha_inicio, $fecha_termino]);
 
         $ret = array();
 
@@ -243,9 +244,10 @@ class EgresoModel extends Model
         $detalle = $data['detalle'];
         $valor = $data['valor'];
 
-        $queryStr = "INSERT INTO egreso VALUES(DEFAULT, '$fecha', '$detalle', $valor, $usuario, $tipo_egreso)";
+        $queryStr = "INSERT INTO egreso VALUES(DEFAULT, ?, ?, ?, ?, ?)";
+        $binds = [$fecha, $detalle, $valor, $usuario, $tipo_egreso];
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -264,10 +266,11 @@ class EgresoModel extends Model
         $detalle = $data['detalle'];
         $valor = $data['valor'];
 
-        $queryStr = "UPDATE egreso SET fecha='$fecha', detalle='$detalle', valor=$valor, idtipo_egreso=$tipo_egreso
-                    WHERE idegreso = $id";
+        $queryStr = "UPDATE egreso SET fecha=?, detalle=?, valor=?, idtipo_egreso=?
+                    WHERE idegreso = ?";
+        $binds = [$fecha, $detalle, $valor, $tipo_egreso, $id];
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
