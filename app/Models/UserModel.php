@@ -48,8 +48,8 @@ class UserModel extends Model
 
         $db = db_connect();
 
-        $queryStr = "SELECT idusuario as id FROM usuario WHERE correo = '$email' LIMIT 1";
-        $query = $db->query($queryStr);
+        $queryStr = "SELECT idusuario as id FROM usuario WHERE correo = ? LIMIT 1";
+        $query = $db->query($queryStr, [$email]);
 
         $ret = array();
 
@@ -72,9 +72,9 @@ class UserModel extends Model
         $role = $userData['rol'];
 
 
-        $queryValidation = "SELECT count(*) as cantidad FROM usuario WHERE correo = '$email'";
+        $queryValidation = "SELECT count(*) as cantidad FROM usuario WHERE correo = ?";
 
-        $queryRes = $db->query($queryValidation);
+        $queryRes = $db->query($queryValidation, [$email]);
 
         $ret = array();
 
@@ -86,10 +86,10 @@ class UserModel extends Model
             return 'Correo ya registrado';
         }
 
-        $queryStr = "INSERT INTO usuario VALUES (DEFAULT, '$nombre', '$email', '$password', $role, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT )";
+        $queryStr = "INSERT INTO usuario VALUES (DEFAULT, ?, ?, ?, ?, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT )";
+        $binds = [$nombre, $email, $password, $role];
 
-
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -110,9 +110,9 @@ class UserModel extends Model
         $estado = $userData['estado'];
 
 
-        $queryValidation = "SELECT count(*) as cantidad FROM usuario WHERE correo = '$email' AND idusuario <> $id";
+        $queryValidation = "SELECT count(*) as cantidad FROM usuario WHERE correo = ? AND idusuario <> ?";
 
-        $queryRes = $db->query($queryValidation);
+        $queryRes = $db->query($queryValidation, [$email, $id]);
 
         $ret = array();
 
@@ -125,12 +125,12 @@ class UserModel extends Model
         }
 
 
-        $queryStr = "UPDATE usuario 
-                    SET nombre='$nombre', correo='$email', rol=$role, activo=$estado 
-                    WHERE idusuario = $id";
+        $queryStr = "UPDATE usuario
+                    SET nombre=?, correo=?, rol=?, activo=?
+                    WHERE idusuario = ?";
+        $binds = [$nombre, $email, $role, $estado, $id];
 
-
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -191,9 +191,9 @@ class UserModel extends Model
     {
         $db = db_connect();
 
-        $queryStr = "SELECT nombre, correo, oficina, fono, red_social, logo, firma_url FROM usuario WHERE idusuario = $id_usuario";
+        $queryStr = "SELECT nombre, correo, oficina, fono, red_social, logo, firma_url FROM usuario WHERE idusuario = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$id_usuario]);
 
         $ret = array();
 
@@ -263,11 +263,11 @@ class UserModel extends Model
         $file = "firma_usuario_".$user.".png";
         file_put_contents(ROOTPATH . "public/uploads/firma/".$file, $decoded_image);
 
-        $queryStr = "UPDATE usuario 
-                    SET firma='$firma', firma_url='$file'
-                    WHERE idusuario = $user";
+        $queryStr = "UPDATE usuario
+                    SET firma=?, firma_url=?
+                    WHERE idusuario = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$firma, $file, $user]);
 
         $error = $db->error();
 
@@ -282,9 +282,9 @@ class UserModel extends Model
 
         $id = $data['user'];
 
-        $queryStr = "SELECT firma, firma_url FROM usuario WHERE idusuario =$id";
+        $queryStr = "SELECT firma, firma_url FROM usuario WHERE idusuario = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$id]);
 
         $ret = array();
 
@@ -326,15 +326,18 @@ class UserModel extends Model
         }
 
         $queryStr = "UPDATE usuario
-                    SET nombre='$nombre', correo='$email', oficina = '$oficina', fono = '$fono', red_social = '$redes'";
+                    SET nombre=?, correo=?, oficina = ?, fono = ?, red_social = ?";
+        $binds = [$nombre, $email, $oficina, $fono, $redes];
 
         if ($filename) {
-            $queryStr .= ", logo = '$filename'";
+            $queryStr .= ", logo = ?";
+            $binds[] = $filename;
         }
 
-        $queryStr .= " WHERE idusuario = $id";
+        $queryStr .= " WHERE idusuario = ?";
+        $binds[] = $id;
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $error = $db->error();
 
