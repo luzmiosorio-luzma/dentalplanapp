@@ -20,14 +20,17 @@ class NovedadModel extends Model
         $queryStr = "SELECT n.idnovedad, n.titulo, n.url, n.activo, n.fecha
                 FROM novedad n";
 
+        $binds = [];
+
         if ($estado) {
-            $queryStr .= " WHERE n.activo = $estado and (n.fecha >= CURDATE() OR n.fecha IS NULL)";
+            $queryStr .= " WHERE n.activo = ? and (n.fecha >= CURDATE() OR n.fecha IS NULL)";
+            $binds[] = $estado;
         }
 
         $queryStr .= " ORDER BY n.idnovedad";
 
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $ret = array();
 
@@ -71,12 +74,14 @@ class NovedadModel extends Model
 
 
         if ($data['fecha']) {
-            $queryStr = "INSERT INTO novedad (titulo, url, activo, fecha) VALUES ('$titulo', '$filename', TRUE, '$data[fecha]')";
+            $queryStr = "INSERT INTO novedad (titulo, url, activo, fecha) VALUES (?, ?, TRUE, ?)";
+            $binds = [$titulo, $filename, $data['fecha']];
         } else {
-            $queryStr = "INSERT INTO novedad (titulo, url, activo) VALUES ('$titulo', '$filename', TRUE)";
+            $queryStr = "INSERT INTO novedad (titulo, url, activo) VALUES (?, ?, TRUE)";
+            $binds = [$titulo, $filename];
         }
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -94,7 +99,8 @@ class NovedadModel extends Model
         $estado = $data['estado'];
         $fecha = $data['fecha'];
 
-        $queryStr = "UPDATE novedad SET titulo = '$titulo', activo = $estado ";
+        $queryStr = "UPDATE novedad SET titulo = ?, activo = ? ";
+        $binds = [$titulo, $estado];
 
         $file = \Config\Services::request()->getFile('file');
 
@@ -109,17 +115,20 @@ class NovedadModel extends Model
             $filename = "nov" . $data['uuid'] . "." . $ext;
             $file->move(ROOTPATH . "public/uploads/novedades/", $filename, true);
 
-            $queryStr .= ", url = '$filename'";
+            $queryStr .= ", url = ?";
+            $binds[] = $filename;
         }
 
         if (isset($data['fecha']) && $data['fecha'] != '') {
             $fecha = $data['fecha'];
-            $queryStr.= ", fecha = '$fecha'";
+            $queryStr .= ", fecha = ?";
+            $binds[] = $fecha;
         }
 
-        $queryStr .= " WHERE idnovedad = $idnovedad";
+        $queryStr .= " WHERE idnovedad = ?";
+        $binds[] = $idnovedad;
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
