@@ -158,6 +158,11 @@ class PdfFactory extends BaseController
         $html_path = ROOTPATH . "public/uploads/2.html";
         $id_presupuesto = $_REQUEST['idp'];
 
+        if (!$this->PresupuestoModel->presupuestoBelongsToUsuario((int) $id_presupuesto, (int) $user)) {
+            echo 'false';
+            return;
+        }
+
         $email = \Config\Services::email();
 
         //        $email->setTo('alonsoleon89@gmail.com');
@@ -285,6 +290,10 @@ class PdfFactory extends BaseController
         $html_path = ROOTPATH . "public/uploads/2.html";
         $id_presupuesto = $_REQUEST['idp'];
 
+        if (!$this->PresupuestoModel->presupuestoBelongsToUsuario((int) $id_presupuesto, (int) $user)) {
+            echo 'false';
+            return;
+        }
 
         $responseData['presupuesto'] = $this->PresupuestoModel->selectDataPresupuesto($id_presupuesto);
         $id_paciente = $responseData['presupuesto'][0]['idpaciente'];

@@ -519,5 +519,14 @@ class PresupuestoModel extends Model
         return $response;
     }
 
+    public function presupuestoBelongsToUsuario(int $idPresupuesto, int $idUsuario): bool
+    {
+        $db = \Config\Database::connect();
+        $count = $db->table('presupuesto')
+            ->where('idpresupuesto', $idPresupuesto)
+            ->where('idusuario', $idUsuario)
+            ->countAllResults();
+        return $count > 0;
+    }
 
 }
