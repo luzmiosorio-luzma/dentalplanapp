@@ -73,9 +73,9 @@ class PresupuestoModel extends Model
         $session = session();
         $usuario = $session->get('user');
 
-        $queryStr = "SELECT idpresupuesto, fecha, nombre FROM presupuesto WHERE idpaciente = $id_paciente AND idusuario = $usuario ORDER BY fecha DESC";
+        $queryStr = "SELECT idpresupuesto, fecha, nombre FROM presupuesto WHERE idpaciente = ? AND idusuario = ? ORDER BY fecha DESC";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$id_paciente, $usuario]);
 
         $ret = array();
 
@@ -93,9 +93,9 @@ class PresupuestoModel extends Model
     {
         $db = db_connect();
 
-        $queryStr = "SELECT idpresupuesto, nombre_pcte, fecha FROM presupuesto WHERE idusuario = $usuario ORDER BY fecha DESC";
+        $queryStr = "SELECT idpresupuesto, nombre_pcte, fecha FROM presupuesto WHERE idusuario = ? ORDER BY fecha DESC";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$usuario]);
 
         $ret = array();
 
@@ -301,8 +301,8 @@ class PresupuestoModel extends Model
         $paciente = $data['paciente'];
 
 
-        $queryStr = "INSERT INTO presupuesto VALUES (DEFAULT,  now(),$subtotal, $descuento,$total, $paciente, $usuario, '$nombre')";
-        $query = $db->query($queryStr);
+        $queryStr = "INSERT INTO presupuesto VALUES (DEFAULT, now(), ?, ?, ?, ?, ?, ?)";
+        $query = $db->query($queryStr, [$subtotal, $descuento, $total, $paciente, $usuario, $nombre]);
         $affected_rows = $this->db->affectedRows();
         if ($affected_rows != 1) {
             $db->transRollback() or die('NO SE PUDO DETENER TRANSACCION');
@@ -327,10 +327,10 @@ class PresupuestoModel extends Model
             $valor = str_replace("'", "", $item['valor']);
 
 
-            $queryStrItem = "INSERT INTO item_presupuesto VALUES (DEFAULT, $idPresupuesto, '" . $descripcion . "', '" . $diente . "', '" . $observaciones . "'";
-            $queryStrItem .= ", " . $valor . " , '" . $item['desarrollo'] . "', '" . $item['estado_pago'] . "', '" . $item['fecha_pago'] . "');";
+            $queryStrItem = "INSERT INTO item_presupuesto VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $bindsItem = [$idPresupuesto, $descripcion, $diente, $observaciones, $valor, $item['desarrollo'], $item['estado_pago'], $item['fecha_pago']];
 
-            $queryItem = $db->query($queryStrItem);
+            $queryItem = $db->query($queryStrItem, $bindsItem);
             $affected_rows_item = $this->db->affectedRows();
 
             if ($affected_rows_item != 1) {
@@ -358,8 +358,8 @@ class PresupuestoModel extends Model
         $idPresupuesto = $data['idPresupuesto'];
         $paciente = $data['paciente'];
 
-        $queryStr = "UPDATE presupuesto SET nombre = '$nombre', subtotal = $subtotal, descuento = $descuento, total = $total WHERE idpresupuesto = " . $idPresupuesto;
-        $query = $db->query($queryStr);
+        $queryStr = "UPDATE presupuesto SET nombre = ?, subtotal = ?, descuento = ?, total = ? WHERE idpresupuesto = ?";
+        $query = $db->query($queryStr, [$nombre, $subtotal, $descuento, $total, $idPresupuesto]);
         $affected_rows = $this->db->affectedRows();
         if ($affected_rows != 1) {
             $db->transRollback() or die('NO SE PUDO DETENER TRANSACCION');
@@ -377,8 +377,8 @@ class PresupuestoModel extends Model
     {
         $db = db_connect();
 
-        $queryStr = "SELECT nombre FROM presupuesto WHERE idpresupuesto = $id_presupuesto";
-        $query = $db->query($queryStr);
+        $queryStr = "SELECT nombre FROM presupuesto WHERE idpresupuesto = ?";
+        $query = $db->query($queryStr, [$id_presupuesto]);
 
         foreach ($query->getResult() as $row) {
             $nombre = $row->nombre;
@@ -394,8 +394,8 @@ class PresupuestoModel extends Model
 
         $descuento = 0;
 
-        $queryStr = "SELECT fecha, descuento, idpaciente FROM presupuesto WHERE idpresupuesto = $id_presupuesto";
-        $query = $db->query($queryStr);
+        $queryStr = "SELECT fecha, descuento, idpaciente FROM presupuesto WHERE idpresupuesto = ?";
+        $query = $db->query($queryStr, [$id_presupuesto]);
 
 
         $ret = array();
@@ -441,8 +441,8 @@ class PresupuestoModel extends Model
     {
         $db = db_connect();
 
-        $queryStr = "SELECT nombre, oficina, fono, correo, red_social, logo FROM usuario WHERE idusuario = $id_usuario";
-        $query = $db->query($queryStr);
+        $queryStr = "SELECT nombre, oficina, fono, correo, red_social, logo FROM usuario WHERE idusuario = ?";
+        $query = $db->query($queryStr, [$id_usuario]);
 
         $ret = array();
 
