@@ -25,12 +25,12 @@ class CitaModel extends Model
 
 
         $queryStr = "SELECT c.idcita, c.fecha, cd.nombre as duracion, c.observacion, c.pago, c.boleta, c.monto, c.asistencia
-        FROM cita c 
+        FROM cita c
         INNER JOIN cita_duracion cd ON c.idduracion = cd.idcita_duracion
-        WHERE c.idusuario = $usuario AND c.idpaciente = $paciente 
+        WHERE c.idusuario = ? AND c.idpaciente = ?
         ORDER BY c.fecha DESC";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$usuario, $paciente]);
 
         $response = array();
 
@@ -60,7 +60,7 @@ class CitaModel extends Model
         $fecha_termino = $citaData['fecha'] . ' ' . $citaData['hora_termino'];
         $duracion = $citaData['duracion'];
         $fecha = $citaData['fecha'] . ' ' . $citaData['hora'] . ':00';
-        $observacion = $citaData['observacion'] ? "'" . $citaData['observacion'] . "'" : 'NULL';
+        $observacionValue = $citaData['observacion'] ?: null;
         $pago = $citaData['pago'];
         $boleta = $citaData['boleta'];
         $monto = $citaData['monto'] ? $citaData['monto'] : 0;
@@ -68,8 +68,9 @@ class CitaModel extends Model
 
 
         $queryStr = "INSERT INTO cita
-                    VALUES (DEFAULT,$observacion,'$fecha','$fecha_termino', 0, $pago, $boleta, $monto, $paciente, $usuario, $duracion, $asistencia)";
-        $query = $db->query($queryStr);
+                    VALUES (DEFAULT, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?)";
+        $binds = [$observacionValue, $fecha, $fecha_termino, $pago, $boleta, $monto, $paciente, $usuario, $duracion, $asistencia];
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -137,11 +138,11 @@ class CitaModel extends Model
         $queryStr = "SELECT COUNT(rw.id_registro) as cantidad
                     FROM registro_whatsapp rw
                     INNER JOIN cita c ON c.idcita = rw.idcita
-                    WHERE c.idusuario = $usuario_id
-                    AND rw.fecha > '$arr_dias[primerDiaMesActual]'
-                    AND rw.fecha < '$arr_dias[primerDiaMesSiguiente]'";
+                    WHERE c.idusuario = ?
+                    AND rw.fecha > ?
+                    AND rw.fecha < ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$usuario_id, $arr_dias['primerDiaMesActual'], $arr_dias['primerDiaMesSiguiente']]);
 
         $ret = array();
 
@@ -159,9 +160,9 @@ class CitaModel extends Model
 
         $response = false;
 
-        $queryStr = "SELECT MAX(fecha) as fecha FROM registro_whatsapp WHERE idcita = $id_cita";
+        $queryStr = "SELECT MAX(fecha) as fecha FROM registro_whatsapp WHERE idcita = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$id_cita]);
 
 
         if ($query->getNumRows() > 0) {
@@ -202,8 +203,8 @@ class CitaModel extends Model
         $db = db_connect();
 
         $queryStr = "INSERT INTO registro_whatsapp
-                    VALUES (DEFAULT, $id_cita, now())";
-        $query = $db->query($queryStr);
+                    VALUES (DEFAULT, ?, now())";
+        $query = $db->query($queryStr, [$id_cita]);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -225,10 +226,10 @@ class CitaModel extends Model
                     c.idcita, p.nombre as nombre_pcte, COALESCE(c.observacion, '') as obs, c.asistencia
                     FROM cita c
                     INNER JOIN paciente p ON p.idpaciente = c.idpaciente
-                    WHERE c.idusuario = $usuario AND c.borrada = FALSE
-                    AND c.fecha BETWEEN '$fecha_desde' AND '$fecha_hasta'";
+                    WHERE c.idusuario = ? AND c.borrada = FALSE
+                    AND c.fecha BETWEEN ? AND ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$usuario, $fecha_desde, $fecha_hasta]);
 
         $ret = array();
 
@@ -291,9 +292,9 @@ class CitaModel extends Model
     {
         $db = db_connect();
 
-        $queryStr = "SELECT cd.nombre FROM cita_duracion cd WHERE cd.idcita_duracion = $id_periodo";
+        $queryStr = "SELECT cd.nombre FROM cita_duracion cd WHERE cd.idcita_duracion = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$id_periodo]);
 
         $ret = array();
 
@@ -335,11 +336,12 @@ class CitaModel extends Model
                            c.observacion as tratamiento, c.boleta, c.pago, c.monto
                     FROM cita c
                     INNER JOIN paciente p on c.idpaciente = p.idpaciente
-                    WHERE c.idusuario = $usuario";
+                    WHERE c.idusuario = ?";
+        $binds = [$usuario];
 
         if ($fecha) {
-            $queryStr .= " AND CAST(c.fecha AS date) = '$fecha'";
-
+            $queryStr .= " AND CAST(c.fecha AS date) = ?";
+            $binds[] = $fecha;
         } else {
             $queryStr .= " AND CAST(c.fecha AS date) = CAST( now() AS date)";
         }
@@ -347,7 +349,7 @@ class CitaModel extends Model
         $queryStr .= " ORDER BY c.fecha";
 
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $ret = array();
         $retTotal = array();
@@ -370,36 +372,38 @@ class CitaModel extends Model
 
         $sqlQueryTotal = "SELECT SUM(c.monto) as monto_total
             FROM cita c
-            WHERE c.idusuario = $usuario";
+            WHERE c.idusuario = ?";
+        $bindsTotal = [$usuario];
 
         if ($fecha) {
-            $sqlQueryTotal .= " AND CAST(c.fecha AS date) = '$fecha'";
-
+            $sqlQueryTotal .= " AND CAST(c.fecha AS date) = ?";
+            $bindsTotal[] = $fecha;
         } else {
             $sqlQueryTotal .= " AND CAST(c.fecha AS date) = CAST( now() AS date)";
         }
 
-        $queryTotal = $db->query($sqlQueryTotal);
+        $queryTotal = $db->query($sqlQueryTotal, $bindsTotal);
 
         foreach ($queryTotal->getResult() as $rowTotal) {
             $arrTotal['monto_total'] = number_format($rowTotal->monto_total, 0, ",", ".");
             $retTotal[] = $arrTotal;
         }
 
-        $sqlQueryTareas = "SELECT t.idtarea, t.nombre, t.completa 
+        $sqlQueryTareas = "SELECT t.idtarea, t.nombre, t.completa
             FROM tarea t
-            WHERE t.idusuario = $usuario";
+            WHERE t.idusuario = ?";
+        $bindsTareas = [$usuario];
 
         if ($fecha) {
-            $sqlQueryTareas .= " AND t.fecha = '$fecha'";
-
+            $sqlQueryTareas .= " AND t.fecha = ?";
+            $bindsTareas[] = $fecha;
         } else {
             $sqlQueryTareas .= " AND t.fecha = CAST( now() AS date)";
         }
 
         $sqlQueryTareas .= " ORDER BY t.idtarea";
 
-        $queryTareas = $db->query($sqlQueryTareas);
+        $queryTareas = $db->query($sqlQueryTareas, $bindsTareas);
 
         foreach ($queryTareas->getResult() as $rowTarea) {
             $arrTarea['id'] = $rowTarea->idtarea;
@@ -433,11 +437,11 @@ class CitaModel extends Model
 //        $minutes_to_add = 0;
 
 
-        $queryStr_duracion = "SELECT c.idduracion as duracion 
-                            FROM cita c 
-                            WHERE c.idcita = $id_cita";
+        $queryStr_duracion = "SELECT c.idduracion as duracion
+                            FROM cita c
+                            WHERE c.idcita = ?";
 
-        $query_duracion = $db->query($queryStr_duracion);
+        $query_duracion = $db->query($queryStr_duracion, [$id_cita]);
 
         if ($query_duracion->getNumRows() > 0) {
             $row = $query_duracion->getRow();
@@ -457,10 +461,10 @@ class CitaModel extends Model
         $fecha_termino = $fecha . " " . $hora_termino;
 
 
-        $queryStr = "UPDATE cita c SET c.fecha = '$fecha_inicio', c.fecha_termino= '$fecha_termino' 
-                    WHERE c.idcita = $id_cita AND c.idusuario = $user";
+        $queryStr = "UPDATE cita c SET c.fecha = ?, c.fecha_termino= ?
+                    WHERE c.idcita = ? AND c.idusuario = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$fecha_inicio, $fecha_termino, $id_cita, $user]);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -485,9 +489,9 @@ class CitaModel extends Model
                     c.boleta, c.monto, p.idpaciente, c.idduracion as duracion, c.asistencia
                     FROM cita c
                     INNER JOIN paciente p ON p.idpaciente = c.idpaciente
-                    WHERE c.idcita =  $citaId";
+                    WHERE c.idcita = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$citaId]);
 
         $ret = array();
 
@@ -519,7 +523,7 @@ class CitaModel extends Model
         $db = db_connect();
 
         $id = $citaData['idCita'];
-        $observacion = $citaData['observacion'] ? "'" . $citaData['observacion'] . "'" : 'NULL';
+        $observacionValue = $citaData['observacion'] ?: null;
         $fecha_termino = $citaData['fecha'] . ' ' . $citaData['hora_termino'];
         $fecha = $citaData['fecha'] . ' ' . $citaData['hora'] . ':00';
         $duracion = $citaData['duracion'];
@@ -528,12 +532,13 @@ class CitaModel extends Model
         $monto = $citaData['monto'] ? $citaData['monto'] : 0;
         $asistencia = $citaData['asistencia'];
 
-        $queryStr = "UPDATE cita 
-                    SET observacion=$observacion,fecha='$fecha', fecha_termino='$fecha_termino', pago=$pago, 
-                        boleta=$boleta, monto=$monto, idduracion=$duracion, asistencia = $asistencia
-                    WHERE idcita = $id";
+        $queryStr = "UPDATE cita
+                    SET observacion=?, fecha=?, fecha_termino=?, pago=?,
+                        boleta=?, monto=?, idduracion=?, asistencia = ?
+                    WHERE idcita = ?";
+        $binds = [$observacionValue, $fecha, $fecha_termino, $pago, $boleta, $monto, $duracion, $asistencia, $id];
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
