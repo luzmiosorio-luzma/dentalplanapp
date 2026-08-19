@@ -17,9 +17,10 @@ class TareaModel extends Model
         $fecha = $data['fecha'];
         $tarea = $data['tarea'];
 
-        $queryStr = "INSERT INTO tarea VALUES(DEFAULT, '$tarea', '$fecha', FALSE, $usuario)";
+        $queryStr = "INSERT INTO tarea VALUES(DEFAULT, ?, ?, FALSE, ?)";
+        $binds = [$tarea, $fecha, $usuario];
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -36,9 +37,10 @@ class TareaModel extends Model
         $nombre = $data['tarea_detalle'];
         $usuario = $data['usuario'];
 
-        $queryStr = "UPDATE tarea SET nombre='$nombre' WHERE idtarea = $tarea and idusuario = $usuario";
+        $queryStr = "UPDATE tarea SET nombre=? WHERE idtarea = ? and idusuario = ?";
+        $binds = [$nombre, $tarea, $usuario];
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -55,9 +57,10 @@ class TareaModel extends Model
         $nombre = $data['nombre'];
         $estado = $data['estado'];
 
-        $queryStr = "UPDATE tarea SET nombre='$nombre', completa=$estado WHERE idtarea = $tarea";
+        $queryStr = "UPDATE tarea SET nombre=?, completa=? WHERE idtarea = ?";
+        $binds = [$nombre, $estado, $tarea];
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -73,9 +76,10 @@ class TareaModel extends Model
         $fecha = $data['fecha'];
         $usuario = $data['usuario'];
 
-        $queryStr = "UPDATE tarea SET fecha= '$fecha' WHERE idtarea = $tarea and idusuario = $usuario";
+        $queryStr = "UPDATE tarea SET fecha= ? WHERE idtarea = ? and idusuario = ?";
+        $binds = [$fecha, $tarea, $usuario];
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -92,9 +96,10 @@ class TareaModel extends Model
         $estado = $data['estado'];
         $usuario = $data['usuario'];
 
-        $queryStr = "UPDATE tarea SET completa=$estado WHERE idtarea = $tarea and idusuario = $usuario";
+        $queryStr = "UPDATE tarea SET completa=? WHERE idtarea = ? and idusuario = ?";
+        $binds = [$estado, $tarea, $usuario];
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -110,9 +115,10 @@ class TareaModel extends Model
         $tarea = $data['tarea'];
         $usuario = $data['usuario'];
 
-        $queryStr = "DELETE FROM tarea WHERE idtarea = $tarea AND idusuario = $usuario";
+        $queryStr = "DELETE FROM tarea WHERE idtarea = ? AND idusuario = ?";
+        $binds = [$tarea, $usuario];
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -125,14 +131,15 @@ class TareaModel extends Model
     {
         $db = db_connect();
 
-        $queryStr = "SELECT t.idtarea as codigo, t.fecha, t.nombre, t.completa 
-                FROM tarea t 
-                WHERE t.fecha 
-                BETWEEN '$fecha_inicio' AND '$fecha_termino'
-                AND t.idusuario = $usuario
+        $queryStr = "SELECT t.idtarea as codigo, t.fecha, t.nombre, t.completa
+                FROM tarea t
+                WHERE t.fecha
+                BETWEEN ? AND ?
+                AND t.idusuario = ?
                 ORDER BY t.fecha";
+        $binds = [$fecha_inicio, $fecha_termino, $usuario];
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $ret = array();
 
