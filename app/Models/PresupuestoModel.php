@@ -116,10 +116,10 @@ class PresupuestoModel extends Model
 
         $db = db_connect();
 
-        $queryStr = "UPDATE item_presupuesto SET fecha_pago = '$valor'
-                    WHERE iditem_presupuesto = $id_item";
+        $queryStr = "UPDATE item_presupuesto SET fecha_pago = ?
+                    WHERE iditem_presupuesto = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$valor, $id_item]);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -135,10 +135,10 @@ class PresupuestoModel extends Model
 
         $db = db_connect();
 
-        $queryStr = "UPDATE item_presupuesto SET estado_pago = '$valor'
-                    WHERE iditem_presupuesto = $id_item";
+        $queryStr = "UPDATE item_presupuesto SET estado_pago = ?
+                    WHERE iditem_presupuesto = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$valor, $id_item]);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -154,10 +154,10 @@ class PresupuestoModel extends Model
 
         $db = db_connect();
 
-        $queryStr = "UPDATE item_presupuesto SET valor = $valor
-                    WHERE iditem_presupuesto = $id_item";
+        $queryStr = "UPDATE item_presupuesto SET valor = ?
+                    WHERE iditem_presupuesto = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$valor, $id_item]);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -174,10 +174,10 @@ class PresupuestoModel extends Model
 
         $db = db_connect();
 
-        $queryStr = "UPDATE item_presupuesto SET descripcion = '$valor'
-                    WHERE iditem_presupuesto = $id_item";
+        $queryStr = "UPDATE item_presupuesto SET descripcion = ?
+                    WHERE iditem_presupuesto = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$valor, $id_item]);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -194,10 +194,10 @@ class PresupuestoModel extends Model
 
         $db = db_connect();
 
-        $queryStr = "UPDATE item_presupuesto SET diente = '$valor'
-                    WHERE iditem_presupuesto = $id_item";
+        $queryStr = "UPDATE item_presupuesto SET diente = ?
+                    WHERE iditem_presupuesto = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$valor, $id_item]);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -214,10 +214,10 @@ class PresupuestoModel extends Model
 
         $db = db_connect();
 
-        $queryStr = "UPDATE item_presupuesto SET observacion = '$valor'
-                    WHERE iditem_presupuesto = $id_item";
+        $queryStr = "UPDATE item_presupuesto SET observacion = ?
+                    WHERE iditem_presupuesto = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$valor, $id_item]);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -234,10 +234,10 @@ class PresupuestoModel extends Model
 
         $db = db_connect();
 
-        $queryStr = "UPDATE item_presupuesto SET desarrollo = '$valor'
-                    WHERE iditem_presupuesto = $id_item";
+        $queryStr = "UPDATE item_presupuesto SET desarrollo = ?
+                    WHERE iditem_presupuesto = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$valor, $id_item]);
 
         $affected_rows = $this->db->affectedRows();
 
