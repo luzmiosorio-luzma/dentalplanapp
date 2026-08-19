@@ -13,10 +13,11 @@ class OdontoModel extends Model
     function getUserPacienteOdontos($id_usuario, $id_paciente)
     {
         $db = db_connect();
-        $queryStr = "SELECT idodontograma,nombre, observacion FROM odontograma 
-                    WHERE atencion_idpaciente = $id_paciente AND atencion_idusuario = $id_usuario";
+        $queryStr = "SELECT idodontograma,nombre, observacion FROM odontograma
+                    WHERE atencion_idpaciente = ? AND atencion_idusuario = ?";
+        $binds = [$id_paciente, $id_usuario];
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $ret = array();
 
@@ -35,9 +36,10 @@ class OdontoModel extends Model
     {
         $db = db_connect();
 
-        $queryStr = "INSERT INTO odontograma VALUES (DEFAULT, $paciente, $usuario, '$nombre', null)";
+        $queryStr = "INSERT INTO odontograma VALUES (DEFAULT, ?, ?, ?, null)";
+        $binds = [$paciente, $usuario, $nombre];
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
         $affected_rows_item = $db->affectedRows();
         if ($affected_rows_item != 1) {
             $res['status'] = 'error';
@@ -59,9 +61,10 @@ class OdontoModel extends Model
         $response = true;
 
         if ($obs != "" && $obs != null){
-            $queryStr_Obs = "UPDATE odontograma SET observacion = '$obs' WHERE idodontograma = $odonto";
+            $queryStr_Obs = "UPDATE odontograma SET observacion = ? WHERE idodontograma = ?";
+            $binds_Obs = [$obs, $odonto];
 
-            $query_Obs = $db->query($queryStr_Obs);
+            $query_Obs = $db->query($queryStr_Obs, $binds_Obs);
 
             $affected_rows_obs = $this->db->affectedRows();
 
@@ -71,9 +74,9 @@ class OdontoModel extends Model
             }
         }
 
-        $queryStr_del = "DELETE FROM item_odontograma WHERE idodontograma = $odonto";
+        $queryStr_del = "DELETE FROM item_odontograma WHERE idodontograma = ?";
 
-        $query = $db->query($queryStr_del);
+        $query = $db->query($queryStr_del, [$odonto]);
 
         foreach ($items as $item) {
             $pieza = $item['pieza'];
@@ -87,9 +90,10 @@ class OdontoModel extends Model
             $area4 = $item['area4'];
             $area5 = $item['area5'];
 
-            $queryStr = "INSERT INTO item_odontograma VALUES (DEFAULT, $odonto, $cara_id, $raiz_id, $pieza, $area1, $area2, $area3, $area4, $area5)";
+            $queryStr = "INSERT INTO item_odontograma VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $binds = [$odonto, $cara_id, $raiz_id, $pieza, $area1, $area2, $area3, $area4, $area5];
 
-            $query = $db->query($queryStr);
+            $query = $db->query($queryStr, $binds);
 
             $affected_rows = $this->db->affectedRows();
 
@@ -159,9 +163,9 @@ class OdontoModel extends Model
                     FROM item_odontograma i
                              INNER JOIN item_odonto_cara ic ON ic.iditem_odonto_cara = i.iditem_odonto_cara
                              INNER JOIN item_odonto_raiz ir ON ir.iditem_odonto_raiz = i.iditem_odonto_raiz
-                    WHERE i.idodontograma = $odonto";
+                    WHERE i.idodontograma = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$odonto]);
 
         $ret = array();
 
@@ -185,9 +189,9 @@ class OdontoModel extends Model
 
         $queryStrObs = "SELECT o.observacion as obs
                     FROM odontograma o
-                    WHERE o.idodontograma = $odonto";
+                    WHERE o.idodontograma = ?";
 
-        $queryObs = $db->query($queryStrObs);
+        $queryObs = $db->query($queryStrObs, [$odonto]);
 
         $ret = array();
 
