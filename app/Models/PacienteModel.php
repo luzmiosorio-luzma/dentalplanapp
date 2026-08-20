@@ -306,9 +306,9 @@ class PacienteModel extends Model
     {
         $db = db_connect();
 
-        $queryStr = "SELECT * FROM anamnesis_corta WHERE idpaciente = $id_paciente";
+        $queryStr = "SELECT * FROM anamnesis_corta WHERE idpaciente = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$id_paciente]);
 
         $ret = array();
 
@@ -346,9 +346,9 @@ class PacienteModel extends Model
         $alertas = str_replace("'", "", $data['alertas']);
         $response = true;
 
-        $queryStr_cantidad = "SELECT COUNT(*) as cantidad FROM anamnesis_corta WHERE idpaciente = $paciente";
+        $queryStr_cantidad = "SELECT COUNT(*) as cantidad FROM anamnesis_corta WHERE idpaciente = ?";
 
-        $query_res = $db->query($queryStr_cantidad);
+        $query_res = $db->query($queryStr_cantidad, [$paciente]);
 
         foreach ($query_res->getResult() as $row) {
             $cantidad = $row->cantidad;
@@ -356,12 +356,13 @@ class PacienteModel extends Model
 
         if ($cantidad > 0) {
             // YA TIENE UNA ANANMESIS PREVIA, SE ACTUALIZA
-            $queryStr_update = "UPDATE anamnesis_corta SET historia_clinica = '$historia', farmacos = '$farmacos', 
-                           habitos = '$habitos', motivo = '$motivo', diagnostico = '$diagnostico', 
-                           observaciones = '$observaciones', alertas = '$alertas'
-                           WHERE idpaciente = $paciente and idusuario = $usuario";
+            $queryStr_update = "UPDATE anamnesis_corta SET historia_clinica = ?, farmacos = ?,
+                           habitos = ?, motivo = ?, diagnostico = ?,
+                           observaciones = ?, alertas = ?
+                           WHERE idpaciente = ? and idusuario = ?";
+            $bindsUpdate = [$historia, $farmacos, $habitos, $motivo, $diagnostico, $observaciones, $alertas, $paciente, $usuario];
 
-            $query = $db->query($queryStr_update);
+            $query = $db->query($queryStr_update, $bindsUpdate);
 
             $affected_rows = $this->db->affectedRows();
 
@@ -376,10 +377,10 @@ class PacienteModel extends Model
             return $response;
         } else {
             // NO TIENE ANAMNESIS PREVIA, SE INGRESA
-            $queryStr_insert = "INSERT INTO anamnesis_corta VALUES(DEFAULT, '$historia', '$farmacos', 
-                                   '$habitos', '$motivo', '$diagnostico', '$observaciones', '$alertas', $paciente, $usuario)";
+            $queryStr_insert = "INSERT INTO anamnesis_corta VALUES(DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $bindsInsert = [$historia, $farmacos, $habitos, $motivo, $diagnostico, $observaciones, $alertas, $paciente, $usuario];
 
-            $query = $db->query($queryStr_insert);
+            $query = $db->query($queryStr_insert, $bindsInsert);
 
             $affected_rows = $this->db->affectedRows();
 
@@ -408,10 +409,11 @@ class PacienteModel extends Model
         $fecha = $data['fecha'];
         $tipo = $data['tipo'];
 
-        $queryStr = "INSERT INTO anamnesis_detalle 
-                    VALUES(DEFAULT, $tipo, $paciente, $usuario , '$desc', '$fecha')";
+        $queryStr = "INSERT INTO anamnesis_detalle
+                    VALUES(DEFAULT, ?, ?, ?, ?, ?)";
+        $binds = [$tipo, $paciente, $usuario, $desc, $fecha];
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -434,15 +436,15 @@ class PacienteModel extends Model
         $tipo = $data['tipo'];
 
         $queryStr = "SELECT
-                        (SELECT nombre FROM usuario WHERE idusuario = $usuario) as usuario,
+                        (SELECT nombre FROM usuario WHERE idusuario = ?) as usuario,
                         detalle, DATE_FORMAT(fecha, '%Y-%m-%d') as fecha
                     FROM anamnesis_detalle
-                    WHERE idanamnesis_detalle_tipo = $tipo
-                      AND atencion_idpaciente = $paciente
-                      AND atencion_idusuario = $usuario
+                    WHERE idanamnesis_detalle_tipo = ?
+                      AND atencion_idpaciente = ?
+                      AND atencion_idusuario = ?
                     ORDER BY fecha DESC";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$usuario, $tipo, $paciente, $usuario]);
 
         $ret = array();
 
