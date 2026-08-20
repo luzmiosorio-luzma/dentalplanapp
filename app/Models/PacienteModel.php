@@ -17,10 +17,10 @@ class PacienteModel extends Model
         $queryStr = "SELECT COUNT(*) AS existe
                         FROM atencion a
                         JOIN paciente p ON a.idpaciente = p.idpaciente
-                        WHERE p.rut = '$rut_paciente'
-                        AND a.idusuario = $usuario";
+                        WHERE p.rut = ?
+                        AND a.idusuario = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$rut_paciente, $usuario]);
 
         $ret = array();
 
@@ -41,18 +41,19 @@ class PacienteModel extends Model
 
         $usuario = $data['usuario'];
         $nombre = $data['nombre'];
-        $rut = $data['rut'] ? "'" . $data['rut'] . "'" : 'NULL';
-        $edad = $data['edad'] ? $data['edad'] : 'NULL';
-        $sexo = $data['sexo'] ? $data['sexo'] : 'NULL';
-        $nacionalidad = $data['nacionalidad'] ? $data['nacionalidad'] : 0;
-        $fono = $data['fono'] ? "'" . $data['fono'] . "'" : 'NULL';
-        $mail = $data['mail'] ? "'" . $data['mail'] . "'" : 'NULL';
-        $direccion = $data['direccion'] ? "'" . $data['direccion'] . "'" : 'NULL';
-        $prevision = $data['prevision'] ? "'" . $data['prevision'] . "'" : 'NULL';
+        $rutValue = $data['rut'] ?: null;
+        $edadValue = $data['edad'] ?: null;
+        $sexoValue = $data['sexo'] ?: null;
+        $nacionalidadValue = $data['nacionalidad'] ?: 0;
+        $fonoValue = $data['fono'] ?: null;
+        $mailValue = $data['mail'] ?: null;
+        $direccionValue = $data['direccion'] ?: null;
+        $previsionValue = $data['prevision'] ?: null;
 
-        $queryStr = "INSERT INTO paciente VALUES (DEFAULT, '$nombre', $rut, $edad, $sexo, $fono, $mail, $direccion, $prevision, $nacionalidad)";
+        $queryStr = "INSERT INTO paciente VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $binds = [$nombre, $rutValue, $edadValue, $sexoValue, $fonoValue, $mailValue, $direccionValue, $previsionValue, $nacionalidadValue];
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
         if ($affected_rows != 1) {
@@ -63,8 +64,8 @@ class PacienteModel extends Model
 
         $idPaciente = $db->insertID();
 
-        $queryStrFk = "INSERT INTO atencion VALUES ($idPaciente, $usuario)";
-        $query = $db->query($queryStrFk);
+        $queryStrFk = "INSERT INTO atencion VALUES (?, ?)";
+        $query = $db->query($queryStrFk, [$idPaciente, $usuario]);
 
         $affected_rows_fk = $this->db->affectedRows();
         if ($affected_rows_fk != 1) {
@@ -86,18 +87,26 @@ class PacienteModel extends Model
 
         $usuario = $data['usuario'];
         $nombre = $data['nombre'];
-        $rut = $data['rut'] ? "'" . $data['rut'] . "'" : 'NULL';
-        $edad = $data['edad'] ? $data['edad'] : 'NULL';
-        $sexo = $data['sexo'] ? $data['sexo'] : 'NULL';
-        $nacionalidad = $data['nacionalidad'] ? $data['nacionalidad'] : 'DEFALUT';
-        $fono = $data['fono'] ? "'" . $data['fono'] . "'" : 'NULL';
-        $mail = $data['mail'] ? "'" . $data['mail'] . "'" : 'NULL';
-        $direccion = $data['direccion'] ? "'" . $data['direccion'] . "'" : 'NULL';
-        $prevision = $data['prevision'] ? "'" . $data['prevision'] . "'" : 'NULL';
+        $rutValue = $data['rut'] ?: null;
+        $edadValue = $data['edad'] ?: null;
+        $sexoValue = $data['sexo'] ?: null;
+        $fonoValue = $data['fono'] ?: null;
+        $mailValue = $data['mail'] ?: null;
+        $direccionValue = $data['direccion'] ?: null;
+        $previsionValue = $data['prevision'] ?: null;
 
-        $queryStr = "INSERT INTO paciente VALUES (DEFAULT, '$nombre', $rut, $edad, $sexo, $fono, $mail, $direccion, $prevision, $nacionalidad)";
+        if ($data['nacionalidad']) {
+            $nacionalidadSql = '?';
+            $nacionalidadBinds = [$data['nacionalidad']];
+        } else {
+            $nacionalidadSql = 'DEFALUT';
+            $nacionalidadBinds = [];
+        }
 
-        $query = $db->query($queryStr);
+        $queryStr = "INSERT INTO paciente VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, $nacionalidadSql)";
+        $binds = array_merge([$nombre, $rutValue, $edadValue, $sexoValue, $fonoValue, $mailValue, $direccionValue, $previsionValue], $nacionalidadBinds);
+
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
         if ($affected_rows != 1) {
@@ -108,8 +117,8 @@ class PacienteModel extends Model
 
         $idPaciente = $db->insertID();
 
-        $queryStrFk = "INSERT INTO atencion VALUES ($idPaciente, $usuario)";
-        $query = $db->query($queryStrFk);
+        $queryStrFk = "INSERT INTO atencion VALUES (?, ?)";
+        $query = $db->query($queryStrFk, [$idPaciente, $usuario]);
 
         $affected_rows_fk = $this->db->affectedRows();
         if ($affected_rows_fk != 1) {
@@ -136,9 +145,9 @@ class PacienteModel extends Model
                     p.fono, p.mail, p.direccion, p.prevision, p.sexo as idsexo, p.nacionalidad
                     FROM atencion a
                     INNER JOIN paciente p on a.idpaciente = p.idpaciente
-                    where idusuario = $id_usuario;";
+                    where idusuario = ?;";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$id_usuario]);
 
         $ret = array();
 
@@ -169,9 +178,9 @@ class PacienteModel extends Model
         $queryStr = "select p.idpaciente, CONCAT(p.nombre, ' - ', p.rut) as paciente
                     FROM atencion a
                              INNER JOIN paciente p on a.idpaciente = p.idpaciente
-                    where idusuario = $id_usuario AND p.nombre LIKE '%$paciente%'";
+                    where idusuario = ? AND p.nombre LIKE ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$id_usuario, '%' . $paciente . '%']);
 
         $ret = array();
 
@@ -192,18 +201,26 @@ class PacienteModel extends Model
 
         $idpaciente = $data['idpaciente'];
         $nombre = str_replace("'", "", $data['nombre']);
-        $rut = $data['rut'] ? "'" . str_replace("'", "", $data['rut']) . "'" : 'NULL';
-        $edad = $data['edad'] ? $data['edad'] : 'NULL';
-        $sexo = $data['sexo'] ? $data['sexo'] : 'NULL';
-        $nacionalidad = $data['nacionalidad'] ? $data['nacionalidad'] : 'DEFALUT';
-        $fono = $data['fono'] ? "'" . str_replace("'", "", $data['fono']) . "'" : 'NULL';
-        $mail = $data['mail'] ? "'" . str_replace("'", "", $data['mail']) . "'" : 'NULL';
-        $direccion = $data['direccion'] ? "'" . str_replace("'", "", $data['direccion']) . "'" : 'NULL';
-        $prevision = $data['prevision'] ? "'" . str_replace("'", "", $data['prevision']) . "'" : 'NULL';
+        $rutValue = $data['rut'] ? str_replace("'", "", $data['rut']) : null;
+        $edadValue = $data['edad'] ?: null;
+        $sexoValue = $data['sexo'] ?: null;
+        $fonoValue = $data['fono'] ? str_replace("'", "", $data['fono']) : null;
+        $mailValue = $data['mail'] ? str_replace("'", "", $data['mail']) : null;
+        $direccionValue = $data['direccion'] ? str_replace("'", "", $data['direccion']) : null;
+        $previsionValue = $data['prevision'] ? str_replace("'", "", $data['prevision']) : null;
 
-        $queryStr = "UPDATE paciente SET nombre = '$nombre', rut=$rut, edad=$edad, sexo=$sexo, fono=$fono, mail=$mail, direccion=$direccion, prevision=$prevision, nacionalidad = $nacionalidad WHERE idpaciente = $idpaciente";
+        if ($data['nacionalidad']) {
+            $nacionalidadSql = '?';
+            $nacionalidadBinds = [$data['nacionalidad']];
+        } else {
+            $nacionalidadSql = 'DEFALUT';
+            $nacionalidadBinds = [];
+        }
 
-        $query = $db->query($queryStr);
+        $queryStr = "UPDATE paciente SET nombre = ?, rut=?, edad=?, sexo=?, fono=?, mail=?, direccion=?, prevision=?, nacionalidad = $nacionalidadSql WHERE idpaciente = ?";
+        $binds = array_merge([$nombre, $rutValue, $edadValue, $sexoValue, $fonoValue, $mailValue, $direccionValue, $previsionValue], $nacionalidadBinds, [$idpaciente]);
+
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -218,9 +235,9 @@ class PacienteModel extends Model
 
         $queryStr = "select nombre, rut, edad, fono, mail, direccion, prevision
                     from paciente
-                    where idpaciente = $id_paciente;";
+                    where idpaciente = ?;";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$id_paciente]);
 
         $ret = array();
 
