@@ -264,10 +264,10 @@ class PacienteModel extends Model
 
         $queryStr = "SELECT u.nombre, DATE_FORMAT(e.fecha, '%Y-%m-%d %H:%i') as fecha, e.detalle FROM evolucion_clinica e
                     INNER JOIN usuario u ON u.idusuario = e.idusuario
-                    WHERE e.idpaciente = $paciente And e.idusuario = $usuario
+                    WHERE e.idpaciente = ? And e.idusuario = ?
                     ORDER BY e.fecha DESC";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$paciente, $usuario]);
 
         $ret = array();
 
@@ -290,9 +290,10 @@ class PacienteModel extends Model
         $paciente = $data['paciente'];
         $usuario = $data['usuario'];
 
-        $queryStr = "INSERT INTO evolucion_clinica VALUES (DEFAULT, '$detalle', now(), $paciente, $usuario)";
+        $queryStr = "INSERT INTO evolucion_clinica VALUES (DEFAULT, ?, now(), ?, ?)";
+        $binds = [$detalle, $paciente, $usuario];
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
