@@ -468,14 +468,12 @@ class PacienteModel extends Model
         $usuario = $data['usuario'];
         $paciente = $data['paciente'];
         $receta = json_encode($data['receta']);
-        $formatReceta = escapeSpecialCharacters($receta);
 
+        $queryStr = "INSERT INTO receta
+                    VALUES(DEFAULT, ?, ?, now(), ?)";
+        $binds = [$paciente, $usuario, $receta];
 
-        $queryStr = "INSERT INTO receta 
-                    VALUES(DEFAULT, $paciente, $usuario , now(), '$formatReceta')";
-
-
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, $binds);
 
         $affected_rows = $this->db->affectedRows();
 
@@ -498,9 +496,9 @@ class PacienteModel extends Model
         $usuario = $data['usuario'];
         $paciente = $data['paciente'];
 
-        $queryStr = "SELECT idreceta, DATE_FORMAT(fecha, '%d-%m-%Y') as fecha, detalle FROM receta WHERE atencion_idpaciente = $paciente AND atencion_idusuario = $usuario";
+        $queryStr = "SELECT idreceta, DATE_FORMAT(fecha, '%d-%m-%Y') as fecha, detalle FROM receta WHERE atencion_idpaciente = ? AND atencion_idusuario = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$paciente, $usuario]);
 
         $ret = array();
 
@@ -523,9 +521,9 @@ class PacienteModel extends Model
         $id_receta = $data['id_receta'];
 
 
-        $queryStr = "SELECT detalle FROM receta WHERE idreceta = $id_receta";
+        $queryStr = "SELECT detalle FROM receta WHERE idreceta = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$id_receta]);
 
         $ret = array();
 
