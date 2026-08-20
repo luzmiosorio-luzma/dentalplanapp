@@ -251,9 +251,9 @@ class PresupuestoModel extends Model
         $db = db_connect();
         $iditem_presupuesto = $data['iditem_presupuesto'];
 
-        $queryStr = "DELETE FROM item_presupuesto WHERE iditem_presupuesto = " . $iditem_presupuesto;
+        $queryStr = "DELETE FROM item_presupuesto WHERE iditem_presupuesto = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$iditem_presupuesto]);
         $affected_rows = $this->db->affectedRows();
         if ($affected_rows != 1) {
             return 0;
@@ -269,10 +269,10 @@ class PresupuestoModel extends Model
         $item = $data['itemAdd'];
         $res = 0;
 
-        $queryStrItem = "INSERT INTO item_presupuesto VALUES (DEFAULT, $idPresupuesto, '" . $item['descripcion'] . "', '" . $item['diente'] . "', '" . $item['observaciones'] . "'";
-        $queryStrItem .= ", " . $item['valor'] . " , '" . $item['desarrollo'] . "', '" . $item['estado_pago'] . "', '" . $item['fecha_pago'] . "');";
+        $queryStrItem = "INSERT INTO item_presupuesto VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $bindsItem = [$idPresupuesto, $item['descripcion'], $item['diente'], $item['observaciones'], $item['valor'], $item['desarrollo'], $item['estado_pago'], $item['fecha_pago']];
 
-        $queryItem = $db->query($queryStrItem);
+        $queryItem = $db->query($queryStrItem, $bindsItem);
         $affected_rows_item = $this->db->affectedRows();
 
         if ($affected_rows_item != 1) {
@@ -416,8 +416,8 @@ class PresupuestoModel extends Model
 
         $db = db_connect();
 
-        $queryStr = "SELECT iditem_presupuesto, descripcion, diente, observacion, valor, desarrollo, estado_pago, fecha_pago FROM item_presupuesto WHERE idpresupuesto = $id_presupuesto";
-        $query = $db->query($queryStr);
+        $queryStr = "SELECT iditem_presupuesto, descripcion, diente, observacion, valor, desarrollo, estado_pago, fecha_pago FROM item_presupuesto WHERE idpresupuesto = ?";
+        $query = $db->query($queryStr, [$id_presupuesto]);
 
         $ret = array();
 
@@ -463,8 +463,8 @@ class PresupuestoModel extends Model
     {
         $db = db_connect();
 
-        $queryStr = "SELECT SUM(valor) as subtotal FROM item_presupuesto WHERE idpresupuesto = $id_presupuesto";
-        $query = $db->query($queryStr);
+        $queryStr = "SELECT SUM(valor) as subtotal FROM item_presupuesto WHERE idpresupuesto = ?";
+        $query = $db->query($queryStr, [$id_presupuesto]);
 
         $ret = array();
 
@@ -479,8 +479,8 @@ class PresupuestoModel extends Model
     {
         $db = db_connect();
 
-        $queryStr = "SELECT descripcion, diente, observacion, valor, desarrollo, estado_pago, fecha_pago FROM item_presupuesto WHERE iditem_presupuesto = $id_item_presupuesto";
-        $query = $db->query($queryStr);
+        $queryStr = "SELECT descripcion, diente, observacion, valor, desarrollo, estado_pago, fecha_pago FROM item_presupuesto WHERE iditem_presupuesto = ?";
+        $query = $db->query($queryStr, [$id_item_presupuesto]);
 
         $ret = array();
 
@@ -507,10 +507,10 @@ class PresupuestoModel extends Model
         $estado = $data['estado'];
         $fecha = $data['fecha'];
 
-        $queryStr = "UPDATE item_presupuesto SET desarrollo = '$desarrollo', estado_pago = '$estado', fecha_pago = '$fecha'
-                    WHERE iditem_presupuesto = $id_item_presupuesto";
+        $queryStr = "UPDATE item_presupuesto SET desarrollo = ?, estado_pago = ?, fecha_pago = ?
+                    WHERE iditem_presupuesto = ?";
 
-        $query = $db->query($queryStr);
+        $query = $db->query($queryStr, [$desarrollo, $estado, $fecha, $id_item_presupuesto]);
 
         $affected_rows = $this->db->affectedRows();
 
