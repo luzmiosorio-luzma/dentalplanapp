@@ -58,7 +58,9 @@ $(document).ready(function (e) {
         "select": false,
         columns: [
             {data: 'idprestacion', visible: false},
-            {data: 'descripcion'},
+            // Fase 6 - Lote 2: mismo campo prestacion.descripcion del hallazgo de
+            // CSV injection (Lote 3), acá en un sink distinto (tabla in-app).
+            {data: 'descripcion', render: DataTable.render.text()},
             {data: 'valor'},
         ],
         "bLengthChange": false,
@@ -92,12 +94,12 @@ $(document).ready(function (e) {
     table_items = $('#table_items').DataTable({
         data: dataSetAddPresupuesto,
         columns: [
-            {title: 'Descripcion', data: 'descripcion'},
-            {title: 'Diente', data: 'diente'},
-            {title: 'Observaciones', data: 'observaciones'},
+            {title: 'Descripcion', data: 'descripcion', render: DataTable.render.text()},
+            {title: 'Diente', data: 'diente', render: DataTable.render.text()},
+            {title: 'Observaciones', data: 'observaciones', render: DataTable.render.text()},
             {title: 'Valor', data: 'valor', visible: false},
             {title: 'Valor', data: 'valor_txt'},
-            {title: 'Desarrollo Tratamiento', data: 'desarrollo', visible: false},
+            {title: 'Desarrollo Tratamiento', data: 'desarrollo', visible: false, render: DataTable.render.text()},
             {title: 'Estado Pago', data: 'estado_pago', visible: false},
             {title: 'Fecha Pago', data: 'fecha_pago'}
         ],
