@@ -1,3 +1,10 @@
+// Fase 6 - Lote 2: escape de texto libre de usuario antes de insertarlo como HTML.
+// Delega en el propio navegador via jQuery (.text() nunca interpreta HTML, .html()
+// lee de vuelta las entidades ya escapadas) en vez de reinventar un escapador.
+function escHtml(str) {
+    return $('<div>').text(str ?? '').html();
+}
+
 var el_modal_uno = document.getElementById('modalAnamnesisUno');
 var anam_modal_uno = bootstrap.Modal.getOrCreateInstance(el_modal_uno);
 
@@ -357,8 +364,8 @@ function loadAnamnesisSection(container_name, tipo, modal) {
             data.forEach(comm => {
 
                 let el = `<div  class="alert alert-dark d-flex flex-column align-items-start justify-content-start" role="alert">
-                                <span>${comm.usuario} | ${comm.fecha}</span>
-                                <p>${comm.detalle}</p>
+                                <span>${escHtml(comm.usuario)} | ${comm.fecha}</span>
+                                <p>${escHtml(comm.detalle)}</p>
                             </div>`;
 
                 container.append(el);

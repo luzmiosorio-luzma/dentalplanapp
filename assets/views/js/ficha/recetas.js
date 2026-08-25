@@ -46,7 +46,9 @@ $(document).ready(function (e) {
         },
         columns: [
             {title: 'Fecha', data: 'fecha'},
-            {title: 'Descripcion', data: 'detalle'},
+            // Fase 6 - Lote 2: detalle viene de removeSpecialCharacters(), que NO
+            // escapa < > & -- solo evita romper el JSON de origen, no es defensa XSS.
+            {title: 'Descripcion', data: 'detalle', render: DataTable.render.text()},
             {title: 'Opciones', data: 'idreceta', visible: false},
         ],
         "autoWidth": false,

@@ -1,5 +1,12 @@
 let signaturePad;
 
+// Fase 6 - Lote 2: escape de texto libre de usuario antes de insertarlo como HTML.
+// Delega en el propio navegador via jQuery (.text() nunca interpreta HTML, .html()
+// lee de vuelta las entidades ya escapadas) en vez de reinventar un escapador.
+function escHtml(str) {
+    return $('<div>').text(str ?? '').html();
+}
+
 $(document).ready(function () {
     const canvas = document.getElementById('signature-pad');
     if (canvas) {
@@ -85,7 +92,7 @@ function cargaDataConsentimiento() {
                             <td class="ps-4 text-muted small">#${consen.id_consentimiento}</td>
                             <td class="n-color">${consen.fecha_formateada}</td>
                             <td class="text-secondary small italic text-truncate" style="max-width: 250px;">
-                               <strong>NP ${consen.presupuesto_nro}:</strong> ${consen.detalle}
+                               <strong>NP ${consen.presupuesto_nro}:</strong> ${escHtml(consen.detalle)}
                             </td>
                             <td class="text-center">
                                 <div class="btn-group shadow-sm rounded-pill overflow-hidden border bg-white">
