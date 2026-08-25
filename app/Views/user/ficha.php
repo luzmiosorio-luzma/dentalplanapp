@@ -46,7 +46,7 @@
                     <?php } ?>
                     
                     <div class="ficha-header-info">
-                        <h2><?= $paciente['nombre'] ?></h2>
+                        <h2><?= esc($paciente['nombre']) ?></h2>
                         <p>Ficha Clínica · Historial Médico</p>
                     </div>
                 </div>

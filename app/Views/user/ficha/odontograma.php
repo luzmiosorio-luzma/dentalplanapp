@@ -27,9 +27,9 @@
                         <?php if ($odontos) {
                             foreach ($odontos as $odonto) { ?>
                                 <li>
-                                    <a onclick="selOdonto(<?= $odonto['idodontograma'] ?>, '<?= $odonto['nombre'] ?>')"
+                                    <a onclick="selOdonto(<?= $odonto['idodontograma'] ?>, '<?= esc($odonto['nombre'], 'js') ?>')"
                                        class="dropdown-item item_odonto" href="#"
-                                       val="<?= $odonto['idodontograma'] ?>"><?= $odonto['nombre'] ?></a>
+                                       val="<?= $odonto['idodontograma'] ?>"><?= esc($odonto['nombre']) ?></a>
                                 </li>
                             <?php }
                         } ?>

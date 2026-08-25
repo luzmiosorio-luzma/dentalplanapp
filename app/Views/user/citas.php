@@ -161,8 +161,8 @@
                                     <option selected disabled></option>
                                     <?php foreach ($pacientes as $paciente) { ?>
                                         <option value="<?= $paciente['idpaciente'] ?>">
-                                            <?= $paciente['nombre'] ?>
-                                            - <?= $paciente['rut'] ?>
+                                            <?= esc($paciente['nombre']) ?>
+                                            - <?= esc($paciente['rut']) ?>
                                         </option>
                                     <?php } ?>
                                 </select>
@@ -361,7 +361,7 @@
                                         disabled>
                                     <option value="" disabled="disabled" selected>Seleccione...</option>
                                     <?php foreach ($pacientes as $paciente) { ?>
-                                        <option value="<?= $paciente['idpaciente'] ?>"><?= $paciente['nombre'] ?></option>
+                                        <option value="<?= $paciente['idpaciente'] ?>"><?= esc($paciente['nombre']) ?></option>
                                     <?php } ?>
                                 </select>
                                 <button type="button" class="btn btn-secondary btn-combine form-linear"

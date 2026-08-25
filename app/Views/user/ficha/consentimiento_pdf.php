@@ -34,13 +34,13 @@
     </div>
 
     <div class="patient-info">
-        <strong>Nombre Paciente:</strong> <?= $paciente_nombre ?><br>
+        <strong>Nombre Paciente:</strong> <?= esc($paciente_nombre) ?><br>
         <strong>Nº Presupuesto:</strong> <?= $presupuesto_nro ?><br>
-        <strong>Tratamiento:</strong> <?= $detalle ?>
+        <strong>Tratamiento:</strong> <?= esc($detalle) ?>
     </div>
 
     <div class="body-text">
-        <div class="section-item"><strong>1.-</strong> He consultado con el profesional cirujano dentista quien me ha explicado y he sido informado(a) que se realizará un tratamiento dental conforme a una evaluación clínica o plan de tratamiento, según presupuesto Nº <?= $presupuesto_nro ?> que se me ha entregado, relativo a <?= $detalle ?>.</div>
+        <div class="section-item"><strong>1.-</strong> He consultado con el profesional cirujano dentista quien me ha explicado y he sido informado(a) que se realizará un tratamiento dental conforme a una evaluación clínica o plan de tratamiento, según presupuesto Nº <?= $presupuesto_nro ?> que se me ha entregado, relativo a <?= esc($detalle) ?>.</div>
         
         <div class="section-item"><strong>2.-</strong> Habiendo sido sometido a un cuidadoso examen clínico y habiéndoseme realizado los exámenes complementarios correspondientes para establecer un adecuado diagnóstico de la patología que presento, se me ha explicado las alternativas de tratamiento posibles y las consecuencias en caso de no realizarlo. Informadamente he aceptado que se realicen las acciones establecidas en mi plan de tratamiento.</div>
         
@@ -56,7 +56,7 @@
         
         <div class="section-item"><strong>8.-</strong> Declaro haber leído cuidadosamente este documento y comprendido a cabalidad el tratamiento descrito por el Cirujano Dentista, existiendo por parte del profesional tratante la máxima disposición, incluso para aclarar dudas o ampliar la información aquí descrita, por lo que me comprometo a seguir las indicaciones que me fueron otorgadas, respetar las medidas de higiene y protocolos que señala el instructivo, y asistir a todos los controles prescritos por el Cirujano Dentista tratante que tendrán el carácter de necesarios y obligatorios, a fin de conseguir un buen resultado en este tratamiento. Además, he sido informado(a) de los costos involucrados en mi tratamiento y de las condiciones de pago del mismo y estoy de acuerdo.</div>
         
-        <div class="section-item"><strong>9.-</strong> He sido informado(a) que el <strong>Dr(a). <?= $nombre_doctor ?></strong>, pertenece al Colegio de Cirujano Dentistas de Chile A.G. y se rige por su Código de Ética (Rol: <?= $rut_doctor ?? 'N/A' ?>).</div>
+        <div class="section-item"><strong>9.-</strong> He sido informado(a) que el <strong>Dr(a). <?= esc($nombre_doctor) ?></strong>, pertenece al Colegio de Cirujano Dentistas de Chile A.G. y se rige por su Código de Ética (Rol: <?= $rut_doctor ?? 'N/A' ?>).</div>
         
         <div class="section-item"><strong>10.-</strong> Doy mi consentimiento para lo enunciado precedentemente.</div>
     </div>

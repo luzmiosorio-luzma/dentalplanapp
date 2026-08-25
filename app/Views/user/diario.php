@@ -221,7 +221,7 @@
                                 <select id="inputPaciente" class="form-select" aria-label="Default select example" required>
                                     <option value="" disabled="disabled" selected>Seleccione...</option>
                                     <?php foreach ($pacientes as $paciente) { ?>
-                                        <option value="<?= $paciente['idpaciente'] ?>"><?= $paciente['nombre'] ?></option>
+                                        <option value="<?= $paciente['idpaciente'] ?>"><?= esc($paciente['nombre']) ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -336,7 +336,7 @@
                                 <select id="inputPacienteEdit" class="form-select" aria-label="Default select example" required>
                                     <option value="" disabled="disabled" selected>Seleccione...</option>
                                     <?php foreach ($pacientes as $paciente) { ?>
-                                        <option value="<?= $paciente['idpaciente'] ?>"><?= $paciente['nombre'] ?></option>
+                                        <option value="<?= $paciente['idpaciente'] ?>"><?= esc($paciente['nombre']) ?></option>
                                     <?php } ?>
                                 </select>
                             </div>

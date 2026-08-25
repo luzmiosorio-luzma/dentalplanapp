@@ -109,7 +109,7 @@
                                 <select id="srcUnidad" class="form-select" aria-label="Default select example" required>
                                     <option value="" disabled="disabled" selected>Seleccione Uno</option>
                                     <?php foreach ($unidades as $unidad) { ?>
-                                        <option value="<?= $unidad['id'] ?>"><?= $unidad['nombre'] ?></option>
+                                        <option value="<?= $unidad['id'] ?>"><?= esc($unidad['nombre']) ?></option>
                                     <?php } ?>
                                 </select>
                                 <div class="invalid-feedback">
@@ -196,7 +196,7 @@
                                 <select id="srcUnidadEdit" class="form-select" aria-label="Default select example" required>
                                     <option value="" disabled="disabled" selected>Seleccione Uno</option>
                                     <?php foreach ($unidades as $unidad) { ?>
-                                        <option value="<?= $unidad['id'] ?>"><?= $unidad['nombre'] ?></option>
+                                        <option value="<?= $unidad['id'] ?>"><?= esc($unidad['nombre']) ?></option>
                                     <?php } ?>
                                 </select>
                                 <div class="invalid-feedback">
