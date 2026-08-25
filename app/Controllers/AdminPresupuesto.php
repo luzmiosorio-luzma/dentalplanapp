@@ -123,11 +123,21 @@ class AdminPresupuesto extends BaseController
             // Load the template file
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($template);
             $sheet = $spreadsheet->getActiveSheet();
-    
+
+            // Fase 6 - Lote 3: proteccion contra CSV/Formula Injection.
+            // StringValueBinder evita que PhpSpreadsheet trate un string que empieza
+            // con '=' como formula real (causa raiz); el prefijo ' es capa adicional
+            // para reapertura/copiado en otras herramientas.
+            $stringBinder = new \PhpOffice\PhpSpreadsheet\Cell\StringValueBinder();
+
             // Llenar datos
             $row = 2; // Assuming data starts from row 2
             foreach ($prestaciones as $prestacion) {
-                $sheet->setCellValue('A' . $row, $prestacion['descripcion']);
+                $descripcion = $prestacion['descripcion'];
+                if (preg_match('/^[=+\-@\t\r]/', $descripcion)) {
+                    $descripcion = "'" . $descripcion;
+                }
+                $sheet->setCellValue('A' . $row, $descripcion, $stringBinder);
                 $sheet->setCellValue('B' . $row, $prestacion['valor_int']);
                 $row++;
             }
