@@ -28,9 +28,9 @@ $(document).ready(function (e) {
         columns: [
             {data: 'id', visible: false},
             {data: 'hora'},
-            {data: 'paciente'},
-            {data: 'fono'},
-            {data: 'tratamiento'},
+            {data: 'paciente', render: DataTable.render.text()},
+            {data: 'fono', render: DataTable.render.text()},
+            {data: 'tratamiento', render: DataTable.render.text()},
             {data: 'boleta'},
             {data: 'pago'},
             {data: 'monto'},
@@ -51,7 +51,10 @@ $(document).ready(function (e) {
         },
         columns: [
             {data: 'id', visible: false},
-            {data: 'nombre'},
+            {data: 'nombre', render: DataTable.render.text()},
+            // 'estado' NO se escapa: CitaModel::selectUserCitasFecha() devuelve
+            // un badge HTML real ('<span class="badge...">Completa</span>'), no
+            // texto de usuario -- escaparlo rompería el badge.
             {data: 'estado'},
             {data: 'estadoid', visible: false},
         ],

@@ -23,7 +23,7 @@ $(document).ready(function (e) {
         columns: [
             {data: 'id', visible: false},
             {data: 'fecha'},
-            {data: 'detalle'},
+            {data: 'detalle', render: DataTable.render.text()},
             {data: 'valor'},
             {data: 'valor_num',visible: false},
         ],

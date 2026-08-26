@@ -39,7 +39,7 @@ $(document).ready(function () {
         columns: [
             {data: 'id', visible: false},
             {data: 'fecha'},
-            {data: 'detalle'},
+            {data: 'detalle', render: DataTable.render.text()},
             {data: 'valor'},
             {data: 'valor_num', visible: false},
             {data: 'cod_tipo_egreso', visible: false}
@@ -62,8 +62,8 @@ $(document).ready(function () {
         columns: [
             {data: 'idcita', visible: false},
             {data: 'fecha', "width": "20%"},
-            {data: 'paciente', "width": "30%"},
-            {data: 'detalle'},
+            {data: 'paciente', "width": "30%", render: DataTable.render.text()},
+            {data: 'detalle', render: DataTable.render.text()},
             {data: 'pago'},
             {data: 'boleta'},
             {data: 'valor', "width": "10%"},

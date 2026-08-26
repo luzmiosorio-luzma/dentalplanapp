@@ -9,7 +9,10 @@ table_horas = $('#table_horas').DataTable({
         {title: 'id', data: 'id', visible: false},
         {title: 'Fecha', data: 'fecha'},
         {title: 'Duración', data: 'duracion'},
-        {title: 'Observacion', data: 'observacion'},
+        {title: 'Observacion', data: 'observacion', render: DataTable.render.text()},
+        // Pago/Boleta/Asistencia NO se escapan: CitaModel::getPacienteCitasFromUsuario()
+        // devuelve badges HTML reales ('<span class="badge...">SI</span>'), no texto
+        // de usuario -- escaparlos rompería los 3 badges.
         {title: 'Pago', data: 'pago'},
         {title: 'Boleta', data: 'boleta'},
         {title: 'Monto', data: 'monto'},

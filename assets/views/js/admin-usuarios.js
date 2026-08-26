@@ -22,8 +22,8 @@ $(document).ready(function (e) {
         },
         columns: [
             {data: 'id', visible: false},
-            {data: 'nombre'},
-            {data: 'email'},
+            {data: 'nombre', render: DataTable.render.text()},
+            {data: 'email', render: DataTable.render.text()},
             {data: 'role'},
             {data: 'roleid', visible: false},
             {data: 'activo'},
