@@ -99,7 +99,7 @@ class PacienteModel extends Model
             $nacionalidadSql = '?';
             $nacionalidadBinds = [$data['nacionalidad']];
         } else {
-            $nacionalidadSql = 'DEFALUT';
+            $nacionalidadSql = 'DEFAULT';
             $nacionalidadBinds = [];
         }
 
@@ -213,7 +213,7 @@ class PacienteModel extends Model
             $nacionalidadSql = '?';
             $nacionalidadBinds = [$data['nacionalidad']];
         } else {
-            $nacionalidadSql = 'DEFALUT';
+            $nacionalidadSql = 'DEFAULT';
             $nacionalidadBinds = [];
         }
 
