@@ -90,26 +90,4 @@ class UnidadModel extends Model
         return $ret;
     }
 
-
-
-    function selectInputActiveUsers()
-    {
-        $db = db_connect();
-
-        $queryStr = "SELECT codigo as id, nombre FROM usuario WHERE activo = TRUE AND rol = 2";
-
-        $query = $db->query($queryStr);
-
-        $ret = array();
-
-        foreach ($query->getResult() as $row) {
-            $arr['id'] = $row->id;
-            $arr['nombre'] = $row->nombre;
-            $ret[] = $arr;
-        }
-
-        return $ret;
-    }
-
-
 }
