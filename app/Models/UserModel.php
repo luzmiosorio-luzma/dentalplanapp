@@ -321,6 +321,9 @@ class UserModel extends Model
             }
 
             $ext = strtolower($file->guessExtension());
+            if ($ext === 'jpeg') {
+                $ext = 'jpg';
+            }
             $filename = "user_logo_" . $id . "." . $ext;
             $file->move(ROOTPATH . "public/uploads/logo/", $filename, true);
         }
