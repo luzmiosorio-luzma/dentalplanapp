@@ -708,7 +708,9 @@ class UserPaciente extends BaseController
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
-        $dompdf->stream("Consentimiento_".str_replace(' ', '_', $paciente['nombre']).".pdf", array("Attachment" => 0));
+        helper('security');
+        $filename = "Consentimiento_" . sanitize_filename(str_replace(' ', '_', $paciente['nombre'])) . ".pdf";
+        $dompdf->stream($filename, array("Attachment" => 0));
         exit;
     }
 }
