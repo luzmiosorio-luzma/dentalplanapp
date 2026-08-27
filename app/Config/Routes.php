@@ -49,16 +49,16 @@ $routes->add('saveresetpass', 'Home::saveresetpass');
 
 $routes->get('pdf', 'Home::pdf');
 $routes->add('home', 'Home::index', ['filter' => 'authGuard']);
-$routes->add('admin', 'Admin::index', ['filter' => 'authGuard']);
+$routes->add('admin', 'Admin::index', ['filter' => ['authGuard', 'adminPageGuard']]);
 $routes->add('user', 'User::index', ['filter' => 'authGuard']);
-$routes->add('admin/usuarios', 'Admin::usuarios', ['filter' => 'authGuard']);
-$routes->add('admin/citas', 'Admin::citas', ['filter' => 'authGuard']);
-$routes->add('admin/unidades', 'Admin::unidades', ['filter' => 'authGuard']);
-$routes->add('admin/productos', 'Admin::productos', ['filter' => 'authGuard']);
-$routes->add('admin/diario', 'Admin::diario', ['filter' => 'authGuard']);
-$routes->add('admin/mensual', 'Admin::mensual', ['filter' => 'authGuard']);
-$routes->add('admin/presupuesto', 'Admin::presupuesto', ['filter' => 'authGuard']);
-$routes->add('admin/novedades', 'Admin::novedades', ['filter' => 'authGuard']);
+$routes->add('admin/usuarios', 'Admin::usuarios', ['filter' => ['authGuard', 'adminPageGuard']]);
+$routes->add('admin/citas', 'Admin::citas', ['filter' => ['authGuard', 'adminPageGuard']]);
+$routes->add('admin/unidades', 'Admin::unidades', ['filter' => ['authGuard', 'adminPageGuard']]);
+$routes->add('admin/productos', 'Admin::productos', ['filter' => ['authGuard', 'adminPageGuard']]);
+$routes->add('admin/diario', 'Admin::diario', ['filter' => ['authGuard', 'adminPageGuard']]);
+$routes->add('admin/mensual', 'Admin::mensual', ['filter' => ['authGuard', 'adminPageGuard']]);
+$routes->add('admin/presupuesto', 'Admin::presupuesto', ['filter' => ['authGuard', 'adminPageGuard']]);
+$routes->add('admin/novedades', 'Admin::novedades', ['filter' => ['authGuard', 'adminPageGuard']]);
 
 
 $routes->add('user/citas', 'User::citas', ['filter' => 'authGuard']);
