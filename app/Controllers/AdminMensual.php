@@ -25,11 +25,12 @@ class AdminMensual extends BaseController
 
         $responseData['tabla'] = $this->EgresoModel->getUserEgresos($usuario, $fecha_inicio, $fecha_termino);
         $ingresos = $this->EgresoModel->getUserResumenIngresos($usuario, $fecha_inicio, $fecha_termino);
+        $ingresosTotal = $ingresos['con_boleta'] + $ingresos['sin_boleta'];
         $egresos = $this->EgresoModel->getUserResumenEgresos($usuario, $fecha_inicio, $fecha_termino);
 
-        $responseData['ingresos'] = number_format($ingresos,0,',', '.');
+        $responseData['ingresos'] = number_format($ingresosTotal,0,',', '.');
         $responseData['egresos'] = number_format($egresos,0,',', '.');
-        $responseData['neto'] = number_format($ingresos-$egresos,0,',', '.');
+        $responseData['neto'] = number_format($ingresosTotal-$egresos,0,',', '.');
 
 //        echo json_encode($responseData);
         echo  '{"data": ' . json_encode($responseData) . '}';
