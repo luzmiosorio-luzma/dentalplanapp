@@ -93,7 +93,11 @@ class PresupuestoModel extends Model
     {
         $db = db_connect();
 
-        $queryStr = "SELECT idpresupuesto, nombre_pcte, fecha FROM presupuesto WHERE idusuario = ? ORDER BY fecha DESC";
+        $queryStr = "SELECT pr.idpresupuesto, p.nombre AS nombre_paciente, pr.fecha
+                    FROM presupuesto pr
+                    LEFT JOIN paciente p ON p.idpaciente = pr.idpaciente
+                    WHERE pr.idusuario = ?
+                    ORDER BY pr.fecha DESC";
 
         $query = $db->query($queryStr, [$usuario]);
 
@@ -101,7 +105,7 @@ class PresupuestoModel extends Model
 
         foreach ($query->getResult() as $row) {
             $arr['idpresupuesto'] = $row->idpresupuesto;
-            $arr['nombre_pcte'] = $row->nombre_pcte;
+            $arr['nombre_pcte'] = $row->nombre_paciente;
             $arr['fecha'] = $row->fecha;
             $ret[] = $arr;
         }
