@@ -92,7 +92,7 @@ function cargaDataConsentimiento() {
                             <td class="ps-4 text-muted small">#${consen.id_consentimiento}</td>
                             <td class="n-color">${consen.fecha_formateada}</td>
                             <td class="text-secondary small italic text-truncate" style="max-width: 250px;">
-                               <strong>NP ${consen.presupuesto_nro}:</strong> ${escHtml(consen.detalle)}
+                               <strong>NP ${escHtml(consen.presupuesto_nro)}:</strong> ${escHtml(consen.detalle)}
                             </td>
                             <td class="text-center">
                                 <div class="btn-group shadow-sm rounded-pill overflow-hidden border bg-white">

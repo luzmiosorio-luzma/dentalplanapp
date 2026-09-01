@@ -35,12 +35,12 @@
 
     <div class="patient-info">
         <strong>Nombre Paciente:</strong> <?= esc($paciente_nombre) ?><br>
-        <strong>Nº Presupuesto:</strong> <?= $presupuesto_nro ?><br>
+        <strong>Nº Presupuesto:</strong> <?= esc($presupuesto_nro) ?><br>
         <strong>Tratamiento:</strong> <?= esc($detalle) ?>
     </div>
 
     <div class="body-text">
-        <div class="section-item"><strong>1.-</strong> He consultado con el profesional cirujano dentista quien me ha explicado y he sido informado(a) que se realizará un tratamiento dental conforme a una evaluación clínica o plan de tratamiento, según presupuesto Nº <?= $presupuesto_nro ?> que se me ha entregado, relativo a <?= esc($detalle) ?>.</div>
+        <div class="section-item"><strong>1.-</strong> He consultado con el profesional cirujano dentista quien me ha explicado y he sido informado(a) que se realizará un tratamiento dental conforme a una evaluación clínica o plan de tratamiento, según presupuesto Nº <?= esc($presupuesto_nro) ?> que se me ha entregado, relativo a <?= esc($detalle) ?>.</div>
         
         <div class="section-item"><strong>2.-</strong> Habiendo sido sometido a un cuidadoso examen clínico y habiéndoseme realizado los exámenes complementarios correspondientes para establecer un adecuado diagnóstico de la patología que presento, se me ha explicado las alternativas de tratamiento posibles y las consecuencias en caso de no realizarlo. Informadamente he aceptado que se realicen las acciones establecidas en mi plan de tratamiento.</div>
         
