@@ -6,6 +6,13 @@ var modalViewReceta = bootstrap.Modal.getOrCreateInstance(myModalViewReceta, {ba
 
 var delta, quill, quillView, table_recetas;
 
+const RECETA_SANITIZE_CONFIG = {
+    ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 's', 'span', 'ol', 'ul', 'li', 'sub', 'sup', 'a'],
+    ALLOWED_ATTR: ['style', 'class', 'href', 'target', 'rel'],
+    FORBID_TAGS: ['script', 'style', 'iframe', 'object', 'embed', 'form'],
+    FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'onfocus']
+};
+
 // const toolbarOptions = [['bold', 'italic', 'underline', 'strike'], ['link', 'image']];
 
 const toolbarOptions = [
@@ -218,7 +225,7 @@ $('#btnPrintReceta').click(function () {
 
     if (qlEditorElement) {
         // Obtener el contenido como string
-        var contentAsString = qlEditorElement.innerHTML;
+        var contentAsString = DOMPurify.sanitize(qlEditorElement.innerHTML, RECETA_SANITIZE_CONFIG);
     } else {
         console.log('Elemento con clase "ql-editor" no encontrado.');
     }
@@ -281,7 +288,7 @@ $('#btnSendReceta').click(function () {
 
     if (qlEditorElement) {
         // Obtener el contenido como string
-        var contentAsString = qlEditorElement.innerHTML;
+        var contentAsString = DOMPurify.sanitize(qlEditorElement.innerHTML, RECETA_SANITIZE_CONFIG);
     } else {
         console.log('Elemento con clase "ql-editor" no encontrado.');
     }
