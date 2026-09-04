@@ -25,10 +25,6 @@
                     <i class="fas fa-arrow-right"></i>
                     Unidades
                 </a>
-                <a class="nav-link sencond-link bg-grad-link" href="<?php echo base_url() ?>/admin/productos">
-                    <i class="fas fa-arrow-right"></i>
-                    Productos
-                </a>
             </div>
         </ul>
     </div>

@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 use App\Models\UserModel;
-use App\Models\UnidadModel;
 use App\Models\NovedadModel;
 
 
@@ -11,7 +10,6 @@ class Admin extends BaseController
     public function __construct()
     {
         $this->UserModel = new UserModel();
-        $this->UnidadModel = new UnidadModel();
         $this->NovedadModel = new NovedadModel();
     }
 
@@ -47,23 +45,6 @@ class Admin extends BaseController
 
         if ($session->get('role') == 1) {
             echo view('admin/citas', $data);
-        } else {
-            return redirect()->to('user');
-        }
-
-    }
-
-    public function productos()
-    {
-        $session = session();
-        $data['name'] = $session->get('name');
-        $data['role'] = $session->get('role');
-
-        $unidades = $this->UnidadModel->selectUnidadesActivas();
-        $data['unidades'] = $unidades;
-
-        if ($session->get('role') == 1) {
-            echo view('admin/productos', $data);
         } else {
             return redirect()->to('user');
         }
