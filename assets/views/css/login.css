@@ -19,7 +19,7 @@ body{
 }
 
 .loginLogo{
-    height: 12rem;
+    height: clamp(4.5rem, 20vw, 12rem);
 }
 
 .login-tagline {
@@ -56,6 +56,13 @@ body{
 /*Small devices (landscape phones, 576px and up)*/
 @media (min-width: 576px) {}
 
+/* Telefonos muy angostos (por debajo de 576px, ej. 320-375px) */
+@media (max-width: 575.98px) {
+    #loginForm {
+        padding: 1rem !important;
+    }
+}
+
 /*Medium devices (tablets, 768px and up)*/
 @media (min-width: 768px) {
     #loginForm{
@@ -66,6 +73,23 @@ body{
 /* Pantallas angostas (por debajo de donde la tarjeta pasa a ancho completo) */
 @media (max-width: 767.98px) {
     .login-tagline {
+        font-size: 1.1rem;
+    }
+
+    #loginForm h1 {
+        font-size: 1.05rem;
+    }
+
+    #loginForm .btn {
+        font-size: 0.95rem;
+    }
+
+    .legend-input {
+        height: 44px;
+        width: 44px;
+    }
+
+    .legend-input > i {
         font-size: 1.1rem;
     }
 }
