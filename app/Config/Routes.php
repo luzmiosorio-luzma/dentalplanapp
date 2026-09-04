@@ -53,7 +53,6 @@ $routes->add('admin', 'Admin::index', ['filter' => ['authGuard', 'adminPageGuard
 $routes->add('user', 'User::index', ['filter' => 'authGuard']);
 $routes->add('admin/usuarios', 'Admin::usuarios', ['filter' => ['authGuard', 'adminPageGuard']]);
 $routes->add('admin/citas', 'Admin::citas', ['filter' => ['authGuard', 'adminPageGuard']]);
-$routes->add('admin/unidades', 'Admin::unidades', ['filter' => ['authGuard', 'adminPageGuard']]);
 $routes->add('admin/diario', 'Admin::diario', ['filter' => ['authGuard', 'adminPageGuard']]);
 $routes->add('admin/mensual', 'Admin::mensual', ['filter' => ['authGuard', 'adminPageGuard']]);
 $routes->add('admin/presupuesto', 'Admin::presupuesto', ['filter' => ['authGuard', 'adminPageGuard']]);

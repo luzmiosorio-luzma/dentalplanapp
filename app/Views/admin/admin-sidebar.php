@@ -13,19 +13,6 @@
                     Citas Médicas
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link " data-bs-toggle="collapse" href="#inventarioMenu" role="button"
-                   aria-expanded="false" aria-controls="inventarioMenu">
-                    <i class="fas fa-boxes"></i>
-                    Inventario
-                </a>
-            </li>
-            <div class="collapse sencond-link-container" id="inventarioMenu">
-                <a class="nav-link sencond-link bg-grad-link" href="<?php echo base_url() ?>/admin/unidades">
-                    <i class="fas fa-arrow-right"></i>
-                    Unidades
-                </a>
-            </div>
         </ul>
     </div>
 

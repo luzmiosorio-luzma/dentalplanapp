@@ -51,20 +51,6 @@ class Admin extends BaseController
 
     }
 
-    public function unidades()
-    {
-        $session = session();
-        $data['name'] = $session->get('name');
-        $data['role'] = $session->get('role');
-
-        if ($session->get('role') == 1) {
-            echo view('admin/unidades', $data);
-        } else {
-            return redirect()->to('user');
-        }
-
-    }
-
     public function diario()
     {
         $session = session();
